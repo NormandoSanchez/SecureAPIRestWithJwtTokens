@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureAPIRestWithJwtTokens", "SecureAPIRestWithJwtTokens.csproj", "{130C6776-8166-747B-7B7A-81E7593F6C5A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{130C6776-8166-747B-7B7A-81E7593F6C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{130C6776-8166-747B-7B7A-81E7593F6C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{130C6776-8166-747B-7B7A-81E7593F6C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{130C6776-8166-747B-7B7A-81E7593F6C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7575DD9B-B1A4-4BFA-B5A9-285130DBB0E2}
+	EndGlobalSection
+EndGlobal

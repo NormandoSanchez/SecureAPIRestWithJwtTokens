@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ex3k9jLtZgA=",
+  "success": true,
+  "projectFilePath": "C:\\Master\\SecureAPIRestWithJwtTokens\\SecureAPIRestWithJwtTokens.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nsmPO\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.12\\microsoft.aspnetcore.openapi.9.0.12.nupkg.sha512",
+    "C:\\Users\\nsmPO\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
