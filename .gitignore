@@ -416,3 +416,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+obj/Debug/net9.0/SecureAPIRestWithJwtTokens.AssemblyInfo.cs
+obj/Debug/net9.0/SecureAPIRestWithJwtTokens.AssemblyInfoInputs.cache
