@@ -1,12 +1,10 @@
-# SecureAPIRestWithJwtTokens - API
+# SecureAPIRestWithJwtTokens
 
 ## a. Descripción general del proyecto
 
+Este repositorio contiene el proyecto principal:
 
-Este repositorio contiene dos proyectos principales:
-
-- **SecureAPIRestWithJwtTokens**: API RESTful con gestion de tokens JWT y envio mediante cookies httponly
-- **SecureAPIRestWithJwtTokens.Test**: Proyecto de pruebas unitarias y de integración para validar la funcionalidad y robustez de la API.
+- **SecureAPIRestWithJwtTokens**: API RESTful con gestión de tokens JWT y envío mediante cookies httponly
 
 ## b. Stack tecnológico utilizado
 
@@ -18,8 +16,8 @@ Este repositorio contiene dos proyectos principales:
 - **Logging:** Microsoft.Extensions.Logging
 - **Gestión de dependencias:** NuGet
 - **Otros:**
-	- Inyección de dependencias nativa de .NET
-	- Middleware personalizado para manejo de excepciones
+    - Inyección de dependencias nativa de .NET
+    - Middleware personalizado para manejo de excepciones
 
 ## c. Información sobre su instalación y ejecución
 
@@ -30,11 +28,11 @@ Este repositorio contiene dos proyectos principales:
 ### Instalación
 1. Clona el repositorio:
 	 ```bash
-	 git clone https://github.com/NormandoSanchez/FarmaciasTrebolERP.API.git
+	 git clone https://github.com/NormandoSanchez/SecureAPIRestWithJwtTokens.git
 	 ```
 2. Accede al directorio del proyecto:
 	 ```bash
-	 cd FarmaciasTrebolERP.API
+	 cd SecureAPIRestWithJwtTokens
 	 ```
 3. Restaura los paquetes NuGet:
 	 ```bash
@@ -48,22 +46,22 @@ Este repositorio contiene dos proyectos principales:
 #### API
 - Para compilar y ejecutar la API:
 	```bash
-	dotnet build FarmaciasTrebolERP.API/FarmaciasTrebolERP.API.csproj
-	dotnet run --project FarmaciasTrebolERP.API/FarmaciasTrebolERP.API.csproj
+	dotnet build SecureAPIRestWithJwtTokens/SecureAPIRestWithJwtTokens.csproj
+	dotnet run --project SecureAPIRestWithJwtTokens/SecureAPIRestWithJwtTokens.csproj
 	```
 - La API estará disponible por defecto en `https://localhost:5001` o `http://localhost:5000`.
 
 #### Tests
 - Para ejecutar los tests unitarios y de integración:
 	```bash
-	dotnet test FarmaciasTrebolERP.API.Test/FarmaciasTrebolERP.API.Test.csproj
+	dotnet test SecureAPIRestWithJwtTokens/SecureAPIRestWithJwtTokens.Test.csproj
 	```
 
 
 ## d. Estructura del proyecto
 
 ```
-FarmaciasTrebolERP.API/                # Proyecto principal de la API
+SecureAPIRestWithJwtTokens/            # Proyecto principal de la API
 ├── Authorization/                     # Políticas y atributos de autorización
 ├── Constants/                         # Constantes de uso global
 ├── Controllers/                       # Controladores de la API REST
@@ -81,7 +79,7 @@ FarmaciasTrebolERP.API/                # Proyecto principal de la API
 ├── appsettings.json                   # Configuración de la aplicación
 └── Program.cs                         # Punto de entrada principal
 
-FarmaciasTrebolERP.API.Test/           # Proyecto de pruebas unitarias y de integración
+SecureAPIRestWithJwtTokens.Test/       # Proyecto de pruebas unitarias y de integración
 ├── Assertions/                        # Utilidades y helpers para aserciones
 ├── Controllers/                       # Pruebas de controladores
 ├── Mappings/                          # Pruebas de mapeos

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SecureAPIRestWithJwtTokens")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fd2abd70cad0c6238012d9bec7b4b7fd80b68fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3a11817cc4ff332cbf082c90d3355b0cf6621dae")]
 [assembly: System.Reflection.AssemblyProductAttribute("SecureAPIRestWithJwtTokens")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SecureAPIRestWithJwtTokens")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
