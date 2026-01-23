@@ -1,41 +1,59 @@
-var builder = WebApplication.CreateBuilder(args);
+using SecureAPIRestWithJwtTokens.Extensions;
+using Serilog;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace SecureAPIRestWithJwtTokens
 {
-    app.MapOpenApi();
-}
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            // Configurar un logger de arranque para registrar problemas durante el inicio
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
 
-app.UseHttpsRedirection();
+            try
+            {
+                // Crear el constructor de la aplicación web con los argumentos de línea de comandos
+                var builder = WebApplication.CreateBuilder(args);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+                // Cargar configuración personalizada desde appsettings.json
+                var apiConfiguration = builder.LoadConfiguration(); // Extensión en WebApplicationExtensions.cs
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+                Log.Information("Aplicación iniciada.");
 
-app.Run();
+                // Configurar Serilog como el proveedor de registro
+                builder.ConfigureSerilog(); // Extensión en WebApplicationExtensions.cs
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+                // Registrar servicios personalizados
+                builder.AddServices(apiConfiguration); // Extensión en WebApplicationExtensions.cs
+
+                // Configurar DbContexts con las cadenas de conexión desencriptadas
+                // Debe ir despues de tener los servicios registrados 
+                builder.ConfigureDbContext(); // Extensión en WebApplicationExtensions.cs
+
+                // Construir la aplicación web
+                var app = builder.Build();
+
+                // Configurar el pipeline de solicitudes HTTP
+                app.ConfigurePipeline(apiConfiguration);
+
+                // Iniciar la aplicación y escuchar solicitudes HTTP
+                app.Run();
+            }
+
+            catch (Exception ex)
+            {
+                // Registrar cualquier excepción fatal que detenga la aplicación
+                Log.Fatal(ex, "La aplicación ha terminado inesperadamente.");
+            }
+
+            finally
+            {
+                // Asegurarse de que todos los registros se escriban antes de salir
+                Log.Information("Aplicación cerrada.");
+                Log.CloseAndFlush();
+            }
+        }
+    }
 }

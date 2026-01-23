@@ -1,0 +1,35 @@
+﻿using AutoMapper;
+using SecureAPIRestWithJwtTokens.Models.DTO;
+using SecureAPIRestWithJwtTokens.Models.InternalDTO;
+using SecureAPIRestWithJwtTokens.Repository.Farmacias;
+
+namespace SecureAPIRestWithJwtTokens.Services.Farmacias
+{
+    public interface IStockFarmaciaCCResultService
+    {
+        Task<List<StockFarmaciaDto>> GetItemsAsync(IDictionary<string, object> filtros);
+    }
+
+    /// <summary>
+    /// Proporciona servicios relacionados con el stock de farmacias Click &amp; Collect.
+    /// </summary>
+    /// <param name="mapper">Mapper para la entidad dirreccion</param>
+    /// <param name="stockFarmaciaCCResultRepo">Repo para el stock de farmacias Click &amp; Collect</param>
+    public class StockFarmaciasCCService(IMapper mapper, IStockFarmaciaCCRepo stockFarmaciaCCResultRepo) : IStockFarmaciaCCResultService
+    {
+        private readonly IMapper _mapper = mapper;
+        private readonly IStockFarmaciaCCRepo _stockFarmaciaCCRepo = stockFarmaciaCCResultRepo;
+
+        /// <summary>
+        /// Obtiene el stock de farmacias Click &amp; Collect para un producto específico.
+        /// </summary>
+        /// <param name="filtros">Filtros para la búsqueda.</param>
+        /// <returns>Lista de StockFarmaciasResponse</returns>
+        public async Task<List<StockFarmaciaDto>> GetItemsAsync(IDictionary<string, object> filtros)
+        {
+            var stockFarmaciasCC = await _stockFarmaciaCCRepo.GetItemsAsync(filtros);
+
+            return _mapper.Map<List<StockFarmaciaDto>>(stockFarmaciasCC);
+        }
+    }
+}
