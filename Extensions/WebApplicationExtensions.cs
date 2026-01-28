@@ -24,6 +24,7 @@ using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace SecureAPIRestWithJwtTokens.Extensions
 {
@@ -217,22 +218,41 @@ namespace SecureAPIRestWithJwtTokens.Extensions
             {
                 options.AddPolicy("SpaClient", policy =>
                 {
-                    var origins = apiConfiguration.Cors.AllowedOrigins ?? [];
-
-                    if (origins.Length > 0)
-                    {
-                        policy.WithOrigins(origins)
-                              .AllowCredentials()
-                              .WithHeaders(apiConfiguration.Cors.AllowAnyHeader ? ["*"] : ["Authorization", "Content-Type"]) // comodín para headers
-                              .WithMethods(apiConfiguration.Cors.AllowAnyMethod ? ["*"] : ["GET", "POST", "PUT", "DELETE", "OPTIONS"]);
-                    }
-                    else
-                    {
-                        // Sin orígenes configurados, crea política cerrada sin permitir cross-site
-                        policy.DisallowCredentials();
-                    }
+                    ConfigureSpaClientCorsPolicy(policy, apiConfiguration);
                 });
             });
+
+        }
+
+        /// <summary>
+        /// Configura la política de CORS para SpaClient.
+        /// </summary>
+        /// <param name="policy">El builder de la política de CORS.</param>
+        /// <param name="apiConfiguration">Configuración de la API.</param>
+        private static void ConfigureSpaClientCorsPolicy(CorsPolicyBuilder policy, ApiConfiguration apiConfiguration)
+        {
+            var origins = apiConfiguration.Cors.AllowedOrigins ?? [];
+            var allowAnyHeader = apiConfiguration.Cors.AllowAnyHeader;
+            var allowAnyMethod = apiConfiguration.Cors.AllowAnyMethod;
+
+            if (origins.Length > 0 && origins[0] == "*")
+            {
+                policy.AllowAnyOrigin()
+                      .WithHeaders(allowAnyHeader ? "*" : "Authorization", "Content-Type")
+                      .WithMethods(allowAnyMethod ? "*" : "GET", "POST", "PUT", "DELETE", "OPTIONS");
+            }
+            else if (origins.Length > 0)
+            {
+                policy.WithOrigins(origins)
+                      .AllowCredentials()
+                      .WithHeaders(allowAnyHeader ? "*" : "Authorization", "Content-Type")
+                      .WithMethods(allowAnyMethod ? "*" : "GET", "POST", "PUT", "DELETE", "OPTIONS");
+            }
+            else
+            {
+                // Sin orígenes configurados, crea política cerrada sin permitir cross-site
+                policy.DisallowCredentials();
+            }
         }
 
         /// <summary>
