@@ -45,7 +45,7 @@ namespace SecureAPIRestWithJwtTokens.Services
                         // Encriptar de forma asíncrona
                         bytes = ue.GetBytes(text);
                         await cs.WriteAsync(bytes.AsMemory(), default);
-                        cs.FlushFinalBlock(); // No existe versión asíncrona
+                        await cs.FlushFinalBlockAsync(); 
                     }
 
                     // Recuperar del MemoryStream los bytes encriptados
@@ -80,7 +80,7 @@ namespace SecureAPIRestWithJwtTokens.Services
                     {
                         await cs.WriteAsync(bytes.AsMemory(), default);
                         await cs.FlushAsync();
-                        cs.FlushFinalBlock();
+                        await cs.FlushFinalBlockAsync();
                     }
 
                     sRet = Encoding.UTF8.GetString(ms.ToArray());

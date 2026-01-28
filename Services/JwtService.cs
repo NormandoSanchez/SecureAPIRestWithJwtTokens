@@ -53,7 +53,7 @@ namespace SecureAPIRestWithJwtTokens.Services
 
             var token = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
+                //audience: _jwtOptions.Audience, // Audiencia no se establece
                 claims: claims,
                 expires: expiration,
                 signingCredentials: credentials
@@ -92,8 +92,8 @@ namespace SecureAPIRestWithJwtTokens.Services
                     IssuerSigningKey = key,
                     ValidateIssuer = true,
                     ValidIssuer = _jwtOptions.Issuer,
-                    ValidateAudience = true,
-                    ValidAudience = _jwtOptions.Audience,
+                    ValidateAudience = false,
+                    // ValidAudience = _jwtOptions.Audience, // Audiencia no se valida
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };

@@ -237,6 +237,7 @@ namespace SecureAPIRestWithJwtTokens.Extensions
 
         /// <summary>
         /// Agrega las opciones de JWT al contenedor de servicios.
+        /// SecretKey se recupera de la configuracion y se desencripta con el metodo interno 
         /// </summary>
         /// <param name="builder"></param>
         private static void AddJWTOptions(this WebApplicationBuilder builder)
@@ -261,7 +262,6 @@ namespace SecureAPIRestWithJwtTokens.Extensions
                 return new JwtAuthOptions
                 {
                     Issuer = config.JwtSettings.Issuer,
-                    Audience = config.JwtSettings.Audience,
                     SecretKey = decryptedKey,
                     AccessTokenExpirationMinutes = config.JwtSettings.AccessTokenExpirationMinutes
                 };
@@ -384,7 +384,6 @@ namespace SecureAPIRestWithJwtTokens.Extensions
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtOptions.Issuer,
-                        ValidAudience = jwtOptions.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                     };
