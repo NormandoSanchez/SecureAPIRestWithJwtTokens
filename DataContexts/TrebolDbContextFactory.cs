@@ -2,7 +2,6 @@ using SecureAPIRestWithJwtTokens.Tools;
 using SecureAPIRestWithJwtTokens.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using SecureAPIRestWithJwtTokens.Constants;
 
 namespace SecureAPIRestWithJwtTokens.DataContexts;
 
@@ -14,19 +13,10 @@ public class TrebolDbContextFactory : IDesignTimeDbContextFactory<TrebolDbContex
 {
     public TrebolDbContext CreateDbContext(string[] args)
     {
-        // Cargar configuración desde appsettings
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false)
-            .Build();
-
         // Usar el mismo helper y constante que en ConfigureDbContext
-        var helper = new ConnectionStringHelper(new CryptoGraphicService(), configuration);
+        var helper = new ConnectionStringHelper(new CryptoGraphicService());
         var connectionString = helper
-            .GetDecriptedConnectionStringOfContext(EntitiesConstants.CONTEXT_TREBOLDB)
+            .GetDecriptedConnectionStringOfContext()
             .GetAwaiter()
             .GetResult();
 

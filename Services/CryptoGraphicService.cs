@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using SecureAPIRestWithJwtTokens.Constants;
 
 namespace SecureAPIRestWithJwtTokens.Services
 {
@@ -101,8 +102,8 @@ namespace SecureAPIRestWithJwtTokens.Services
         /// <exception cref="InvalidOperationException"></exception>
         private static (byte[] Key, byte[] IV) GetKeys(bool useInternalKeys)
         {
-            string envKeys = $"{(useInternalKeys ? "INTERNAL" : "EXTERNAL")}_API_KEY";
-            string envIV = $"{(useInternalKeys ? "INTERNAL" : "EXTERNAL")}_API_IV";
+            string envKeys = $"{(useInternalKeys ? EnvironmentConstants.INTERNAL_API_KEY : EnvironmentConstants.EXTERNAL_API_KEY)}";
+            string envIV = $"{(useInternalKeys ? EnvironmentConstants.INTERNAL_API_IV : EnvironmentConstants.EXTERNAL_API_IV)}";
 
             string base64Input = Environment.GetEnvironmentVariable(envKeys) ?? throw new InvalidOperationException($"{envKeys} environment variable no establecida.");
             var k = Convert.FromBase64String(base64Input) ?? throw new InvalidOperationException($"{envKeys} environment variable no establecida.");

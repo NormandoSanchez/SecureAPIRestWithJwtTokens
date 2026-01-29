@@ -5,18 +5,15 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:7017;http://localhost:5044",
+      "applicationUrl": "https://localhost:7017",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "applicationUrl": "http://localhost:5044",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "INTERNAL_API_KEY": "EA8ODQwLCigpKissLS4vMA==",
+        "INTERNAL_API_IV": "AQIDBAUGBwgXFxkaGxwdHg==",
+        "EXTERNAL_API_KEY": "BA8GEgY8ETgtLwEFAg5ONQ==",
+        "EXTERNAL_API_IV": "NU4OAgUBLy04ETwGEgYPBA==",
+        "DB_PASSWORD": "n3nQcqTGOkhqKH1DlbGiHA==",
+        "DB_STRING_CONNECTION": "Server=10.150.5.21\\SQL2017;Database=TrebolDB;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;"
       }
     }
   }

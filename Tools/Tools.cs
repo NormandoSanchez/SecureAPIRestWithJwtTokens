@@ -1,3 +1,4 @@
+using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.Services;
 
 namespace SecureAPIRestWithJwtTokens.Tools
@@ -5,68 +6,26 @@ namespace SecureAPIRestWithJwtTokens.Tools
     /// <summary>
     /// Helper para obtener y desencriptar la cadena de conexión desde appsettings.json
     /// </summary>
-    public class ConnectionStringHelper(ICryptoGraphicService cryptoService, IConfiguration configuration)
+    public class ConnectionStringHelper(ICryptoGraphicService cryptoService)
     {
         private readonly ICryptoGraphicService _cryptoService = cryptoService;
-        private readonly IConfiguration _configuration = configuration;
 
         /// <summary>
         /// Recupera y desencripta la cadena de conexión para el contexto especificado
         /// </summary>
-        /// <param name="contextName"></param>
         /// <returns>Cadena de conexión desencriptada</returns>
-        public async Task<string?> GetDecriptedConnectionStringOfContext(string contextName)
+        public async Task<string?> GetDecriptedConnectionStringOfContext()
         {
-            var connStringTemplate = _configuration.GetConnectionString($"{contextName}") ?? string.Empty;
-            if (string.IsNullOrEmpty(connStringTemplate))
+            string dbPassword = Environment.GetEnvironmentVariable(EnvironmentConstants.DB_PASSWORD) ?? string.Empty;
+            string dbConnectionString = Environment.GetEnvironmentVariable(EnvironmentConstants.DB_STRING_CONNECTION) ?? string.Empty;
+            if (!string.IsNullOrEmpty(dbPassword) && !string.IsNullOrEmpty(dbConnectionString))
             {
-                return null;
+                var decryptedPassword = await _cryptoService.DecriptAsync(dbPassword);
+                dbConnectionString = dbConnectionString.Replace("${DB_PASSWORD}", decryptedPassword);
+                return dbConnectionString;
             }
-
-            var dbPassword = ExtractPasswordFromConnectionStringOfContext(connStringTemplate);
-            if (string.IsNullOrEmpty(dbPassword))
-            {
-                return null;
-            }
-
-            var decryptedPassword = await _cryptoService.DecriptAsync(dbPassword);
-
-            return UpdateConnectionStringWithPasswordOfContext(connStringTemplate, decryptedPassword);
-        }
-
-        /// <summary>
-        /// Extrae la contraseña de la cadena de conexión
-        /// </summary>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
-        private static string? ExtractPasswordFromConnectionStringOfContext(string connectionString)
-        {
-            var builderConnString = new System.Data.Common.DbConnectionStringBuilder
-            {
-                ConnectionString = connectionString
-            };
-
-            return builderConnString.ContainsKey("Password")
-                ? builderConnString["Password"].ToString()
-                : null;
-        }
-
-        /// <summary>
-        /// Actualiza la cadena de conexión con la contraseña desencriptada
-        /// </summary>
-        /// <param name="connectionString"></param>
-        /// <param name="password"></param>
-        /// <returns>Cadena de conexión actualizada</returns>
-        private static string UpdateConnectionStringWithPasswordOfContext(string connectionString, string password)
-        {
-            var builderConnString = new System.Data.Common.DbConnectionStringBuilder
-            {
-                ConnectionString = connectionString
-            };
-
-            builderConnString["Password"] = password;
-
-            return builderConnString.ConnectionString;
+            
+            return null;
         }
     }
 

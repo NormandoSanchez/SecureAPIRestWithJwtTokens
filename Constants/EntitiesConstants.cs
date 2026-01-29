@@ -2,7 +2,6 @@ namespace SecureAPIRestWithJwtTokens.Constants;
 
 public static class EntitiesConstants
 {
-    public const string CONTEXT_TREBOLDB = "TrebolDBConnection";
     public const string PAIS = "País";
     public const string PAISES = "Paises";
     public const string COMUNIDADAUT = "ComunidadAut";

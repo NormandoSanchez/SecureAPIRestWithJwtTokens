@@ -74,13 +74,13 @@ namespace SecureAPIRestWithJwtTokens.Extensions
                 var helper = sp.GetRequiredService<ConnectionStringHelper>();
 
                 var connectionString = helper
-                    .GetDecriptedConnectionStringOfContext(EntitiesConstants.CONTEXT_TREBOLDB)
+                    .GetDecriptedConnectionStringOfContext()
                     .GetAwaiter()
                     .GetResult();
 
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    Log.Error($"Problemas en la configuración de la cadena de conexión '{EntitiesConstants.CONTEXT_TREBOLDB}'.");
+                    Log.Error("Problemas en la configuración de la cadena de conexión.");
                     throw new ValidationException("La cadena de conexión no puede ser nula o vacía.");
                 }
 
@@ -441,7 +441,6 @@ namespace SecureAPIRestWithJwtTokens.Extensions
 
             builder.Services.AddAuthorization();
         }
-        
 
         /// <summary>
         /// Configura la limitación de tasa para la aplicación, incluyendo políticas globales y específicas.
