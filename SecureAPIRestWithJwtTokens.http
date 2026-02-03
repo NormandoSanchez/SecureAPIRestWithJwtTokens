@@ -1,6 +1,214 @@
 @SecureAPIRestWithJwtTokens_HostAddress = http://localhost:5044
 
-GET {{SecureAPIRestWithJwtTokens_HostAddress}}/weatherforecast/
+### Variables de ejemplo para pruebas
+@username = admin
+@password = admin123
+@userId = 1
+@paisId = 1
+@comunidadAutId = 1
+@provinciaId = 1
+@poblacionId = 1
+
+########################################
+### AUTENTICACIÓN - AuthController
+########################################
+
+### Login - Autenticar usuario
+POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "userName": "{{username}}",
+  "password": "{{password}}"
+}
+
+###
+
+### Refresh Token - Refrescar token de acceso
+POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/refresh
+Content-Type: application/json
+
+###
+
+### Logout - Cerrar sesión
+POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/logout
+Content-Type: application/json
+
+###
+
+### Session Verify - Verificar sesión activa
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/session/verify
+Accept: application/json
+
+###
+
+### Get Main Modules - Obtener módulos principales del usuario
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/processes/mainModules
+Accept: application/json
+
+###
+
+### Get Menu Options - Obtener opciones de menú de un módulo
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/processes/menuOptions?idModulo=MOD001
+Accept: application/json
+
+###
+
+### Get Auth Process Codes - Obtener códigos de procesos autorizados
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/processes/Codes
+Accept: application/json
+
+###
+
+########################################
+### GEOGRAFÍA - Paises Controller
+########################################
+
+### Get All Paises - Obtener todos los países
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Paises
+Accept: application/json
+
+###
+
+### Get Pais By Id - Obtener país por ID
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Paises/{{paisId}}
+Accept: application/json
+
+###
+
+########################################
+### GEOGRAFÍA - ComunidadesAut Controller
+########################################
+
+### Get All Comunidades - Obtener todas las comunidades autónomas
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/ComunidadesAut
+Accept: application/json
+
+###
+
+### Get All Comunidades By Pais - Obtener comunidades por país
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/ComunidadesAut?pais={{paisId}}
+Accept: application/json
+
+###
+
+### Get Comunidad By Id - Obtener comunidad autónoma por ID
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/ComunidadesAut/{{comunidadAutId}}
+Accept: application/json
+
+###
+
+########################################
+### GEOGRAFÍA - Provincias Controller
+########################################
+
+### Get All Provincias - Obtener todas las provincias
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Provincias
+Accept: application/json
+
+###
+
+### Get Provincias By Pais - Obtener provincias por país
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Provincias?pais={{paisId}}
+Accept: application/json
+
+###
+
+### Get Provincias By Comunidad - Obtener provincias por comunidad autónoma
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Provincias?comunidadAut={{comunidadAutId}}
+Accept: application/json
+
+###
+
+### Get Provincias Click & Collect - Obtener provincias con Click & Collect
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Provincias?clickCollect=true
+Accept: application/json
+
+###
+
+### Get Provincia By Id - Obtener provincia por ID
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Provincias/{{provinciaId}}
+Accept: application/json
+
+###
+
+########################################
+### GEOGRAFÍA - Poblaciones Controller
+########################################
+
+### Get All Poblaciones - Obtener todas las poblaciones
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Poblaciones
+Accept: application/json
+
+###
+
+### Get Poblaciones By Provincia - Obtener poblaciones por provincia
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Poblaciones?provincia={{provinciaId}}
+Accept: application/json
+
+###
+
+### Get Poblaciones By Pais - Obtener poblaciones por país
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Poblaciones?pais={{paisId}}
+Accept: application/json
+
+###
+
+### Get Poblacion By Id - Obtener población por ID
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Poblaciones/{{poblacionId}}
+Accept: application/json
+
+###
+
+########################################
+### AVISOS - Avisos Internos Controller
+########################################
+
+### Get Avisos - Obtener avisos internos de un usuario
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Avisos/{{userId}}
+Accept: application/json
+
+###
+
+### Get Avisos Vistos - Obtener avisos vistos
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Avisos/{{userId}}?vistos=true
+Accept: application/json
+
+###
+
+### Get Avisos No Vistos - Obtener avisos no vistos
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Avisos/{{userId}}?vistos=false
+Accept: application/json
+
+###
+
+### Get Avisos Antiguos - Obtener avisos antiguos
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Avisos/{{userId}}?antiguos=true
+Accept: application/json
+
+###
+
+### Get Avisos No Vistos Antiguos - Obtener avisos no vistos incluyendo antiguos
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Avisos/{{userId}}?vistos=false&antiguos=true
+Accept: application/json
+
+###
+
+########################################
+### CLICK & COLLECT - Stock Farmacias
+########################################
+
+### Get Stock Farmacias - Obtener stock de farmacias para artículos específicos
+# arts: Códigos nacionales separados por |
+# uds: Unidades mínimas de stock separadas por |
+# farmaini: ID de farmacia (0000 para todas)
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/ClickCollect/StockFarmacia/000001|000002/1|2/0000
+Accept: application/json
+
+###
+
+### Get Stock Farmacia Específica - Obtener stock de una farmacia específica
+GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/ClickCollect/StockFarmacia/000001/1/0003
 Accept: application/json
 
 ###
