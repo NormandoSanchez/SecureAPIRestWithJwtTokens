@@ -1,13 +1,14 @@
-# Ejemplo de uso del SqlDataService en un controlador API una conexion a base de datos de farmacia
+# Ejemplos de uso
 
+## Ejemplo de uso del SqlDataService en un controlador API una conexion a base de datos de farmacia
 
-```
+```csharp
 using FarmaciasTrebolERP.API.Models.Internal;
 using FarmaciasTrebolERP.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
-/namespace FarmaciasTrebolERP.API.Controllers;
+namespace FarmaciasTrebolERP.API.Controllers;
     
 [ApiController]
 [Route("api/[controller]")]
@@ -72,13 +73,11 @@ public class FarmaciaDataController : ControllerBase
         // ← sqlService se dispone automáticamente aquí (await using)
     }
 }
-
 ```
 
-# Ejemplo de uso avanzado: Consultar múltiples farmacias en paralelo
+## Ejemplo de uso avanzado: Consultar múltiples origenes en paralelo
 
-
-```
+```csharp
 [HttpGet("inventario-consolidado")]
 public async Task<IActionResult> GetInventarioConsolidado([FromQuery] int[] farmaciasIds)
 {
@@ -130,6 +129,3 @@ public async Task<IActionResult> GetInventarioConsolidado([FromQuery] int[] farm
         return StatusCode(500, "Error al obtener inventario");
     }
 }
-
-```
-

@@ -1,6 +1,6 @@
 # Ejemplo de uso de ParallelSqlExecutor
 
-```
+```csharp
 using FarmaciasTrebolERP.API.Models.Internal;
 using FarmaciasTrebolERP.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +19,6 @@ public class MultiServerQueryController : ControllerBase
     {
         _parallelSqlExecutor = parallelSqlExecutor;
     }
-```
 
     /// <summary>
     /// Ejecuta una consulta SELECT en una lista de servidores de forma paralela y resiliente.
