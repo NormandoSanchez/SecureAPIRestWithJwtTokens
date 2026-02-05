@@ -8,20 +8,17 @@ using SecureAPIRestWithJwtTokens.Services;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
 {
-    public interface IStockFarmaciaCCRepo
-    {
-        Task<IEnumerable<FarmaciaStock>> GetItemsAsync(IDictionary<string, object> filtros);
-    }
-
     public class StockFarmaciasCCRepository(TrebolDbContext context,
                                             ILogger<StockFarmaciasCCRepository> logger,
                                             ISqlDataServiceFactory sqlDataServiceFactory,
                                             ApiConfiguration configuration,
                                             IParallelSqlExecutor<DataTable> parallelSqlExecutor,
-                                            IMapper mapper) : IStockFarmaciaCCRepo
+                                            IMapper mapper) : IGenericRepository<FarmaciaStock>
     {
         private readonly TrebolDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
         private readonly ILogger<StockFarmaciasCCRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));   
@@ -35,17 +32,17 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
         /// </summary>
         /// <param name="filtros">Diccionario de filtros para la consulta</param>
         /// <returns></returns>
-        public async Task<IEnumerable<FarmaciaStock>> GetItemsAsync(IDictionary<string, object> filtros)
-        {
+        public async Task<IEnumerable<FarmaciaStock>?> GetAllAsync(IDictionary<string, object>? filtros = null)
+        {   
             // Parametro FarmaciaInicial 
             string? codFarmacia = Common.ParseStringFilter(filtros, FilterConstants.FARMAINI);
 
             // Parametro Articulos
-            List<string> lstArticulos = ProcesarFiltroArticulos(filtros); // Lista de articulos solicitados
+            List<string> lstArticulos = filtros == null ? [] : ProcesarFiltroArticulos(filtros); // Lista de articulos solicitados
             Dictionary<string, int> lstStocks = CrearListaStocks(lstArticulos); // Lista de articulos y stocks
 
             // Procesar parametro stock
-            ProcesarFiltroStocks(filtros, lstArticulos, ref lstStocks);
+            if(filtros != null) ProcesarFiltroStocks(filtros, lstArticulos, ref lstStocks);
             
             // Obtener Farmacias con C&C 
             List<FarmaciaStock> farmaciasCC = await GetFarmaciasCC(codFarmacia);
@@ -76,18 +73,43 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
             return farmaciasCC;
         }
 
+        public Task AddAsync(FarmaciaStock entidad)
+        {
+            // Implementación mínima para evitar warnings
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(FarmaciaStock entidad)
+        {
+            // Implementación mínima para evitar warnings
+            throw new NotImplementedException();
+        }
+       
+        public Task DeleteAsync(int id)
+        {
+            // Implementación mínima para evitar warnings
+            throw new NotImplementedException();
+        }
+
+        public Task<FarmaciaStock?> GetByIdAsync(int id)
+        {
+            // Implementación mínima para evitar warnings
+            throw new NotImplementedException();
+        }
+        
         #region Métodos Privados
         /// <summary>
         /// Procesa el filtro de Articulos
         /// </summary>
         /// <param name="filtros">filtros</param>
         /// <returns></returns>
-        private static List<string> ProcesarFiltroArticulos(IDictionary<string, object> filtros)
+        private static List<string> ProcesarFiltroArticulos(IDictionary<string, object>? filtros)
         {
             List<string> lstArticulos = []; // Lista de articulos solicitados
 
             // Procesar parametro articulos 
-            if (filtros.TryGetValue(FilterConstants.ARTICULOS, out object? valueart) && valueart != null &&
+            if (filtros != null && !Common.IsFilterEmptyOrNull(filtros, FilterConstants.ARTICULOS) &&
+                filtros.TryGetValue(FilterConstants.ARTICULOS, out object? valueart) && valueart != null &&
                 !string.IsNullOrWhiteSpace(valueart.ToString()))
             {
                 string[] parts = (valueart?.ToString() ?? string.Empty).Split('|');
@@ -99,7 +121,7 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
                     }
                 }
             }
-
+            
             return lstArticulos;
         }
 
@@ -123,11 +145,12 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
         /// </summary>
         /// <param name="filtros">filtros</param>
         /// <param name="lstArticulos">lista de articulos</param>
-        /// <param name="lstStocks">lista de stocks</param>
+        /// <param name="lstStocks">lista de stocks completada y devuelta</param>
         private static void ProcesarFiltroStocks(IDictionary<string, object> filtros, List<string> lstArticulos, ref Dictionary<string, int> lstStocks)
         {
             // Procesar parametro stock
-            if (filtros.TryGetValue(FilterConstants.UDS, out object? valueuds) && valueuds != null &&
+            if (!Common.IsFilterEmptyOrNull(filtros, FilterConstants.UDS) && 
+                filtros.TryGetValue(FilterConstants.UDS, out object? valueuds) && valueuds != null &&
                 !string.IsNullOrWhiteSpace(valueuds.ToString()))
             {
                 string[] parts = (valueuds?.ToString() ?? string.Empty).Split('|');

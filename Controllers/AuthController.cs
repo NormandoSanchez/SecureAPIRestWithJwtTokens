@@ -2,11 +2,11 @@ using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
 using SecureAPIRestWithJwtTokens.Models.Responses;
-using SecureAPIRestWithJwtTokens.Services;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Controllers
 {

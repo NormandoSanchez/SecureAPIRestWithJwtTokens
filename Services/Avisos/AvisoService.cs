@@ -1,7 +1,8 @@
 using AutoMapper;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
-using SecureAPIRestWithJwtTokens.Repository;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services.Avisos;
 

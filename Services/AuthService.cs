@@ -1,9 +1,9 @@
 ﻿using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
-using SecureAPIRestWithJwtTokens.Repository;
 using SecureAPIRestWithJwtTokens.Tools;
-using Microsoft.AspNetCore.Mvc;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services
 {
@@ -39,7 +39,7 @@ namespace SecureAPIRestWithJwtTokens.Services
             Usuario? user = await _securityRepo.GetByCredentialsAsync(loginRequest);
             if (user != null)
             {
-                return _mappingService.MapUsuarioToUserInfo(user);
+                return  await _mappingService.MapUsuarioToUserInfoAsync(user);
             }
 
             return null;
@@ -58,7 +58,7 @@ namespace SecureAPIRestWithJwtTokens.Services
                 Usuario? user = await _securityRepo.GetByIdAsync(userId);     
                 if (user != null)
                 {
-                    usuario = _mappingService.MapUsuarioToUserInfo(user);
+                    usuario = await _mappingService.MapUsuarioToUserInfoAsync(user);
                 }
             }
 
@@ -134,18 +134,5 @@ namespace SecureAPIRestWithJwtTokens.Services
             return await _internalCryptoService.EncriptAsync(decrypted);
         }
         #endregion
-    }
-
-    public interface IAuthService
-    {
-        Task<UserInfoDto?> ValidateUserCredentialsAsync(LoginApiRequest loginRequest);
-        Task<UserInfoDto?> ValidateRefreshTokenAsync(int userId, string refreshToken);
-        Task SaveRefreshToken(int userId, string userName, string refreshToken);
-        Task DeleteRefreshToken(int userId);
-        Task<List<string>?> GetCodeProcessByUserAndProfileAsync(int userId, int perfilId); 
-        Task<List<AuthProcessDto>> GetProcessesByUserAndProfileAsync(int userId, int perfilId, 
-                                                                    ProcessType typeClass,
-                                                                    bool? visibleOn = true,
-                                                                    string? idModulo = null);
     }
 }

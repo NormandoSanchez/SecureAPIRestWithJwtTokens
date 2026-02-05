@@ -3,6 +3,7 @@ using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.EntityFrameworkCore;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository
 {
@@ -219,17 +220,4 @@ namespace SecureAPIRestWithJwtTokens.Repository
             return procesos;
         } 
     }   
-
-    public interface ISecurityRepo
-    {
-        Task<Usuario?> GetByCredentialsAsync(LoginApiRequest login);
-        Task<Usuario?> GetByIdAsync(int id);
-        Task SaveRefreshToken(int userId, string userName, string refreshToken, DateTime expiry);
-        Task<string?> GetRefreshToken(int userId);
-        Task DeleteRefreshToken(int userId);
-        Task<List<string>?> GetCodeProcessByUserAndProfileAsync(int userId, int perfilId); 
-        Task<List<AuthProcessDto>?> GetProcessByUserAndProfileAsync(int userId, int perfilId, 
-                                                                    ProcessType typeClass, bool? VisibleOn = true,
-                                                                    string? idModulo = null);
-    }
 }

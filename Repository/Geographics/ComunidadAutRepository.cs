@@ -3,6 +3,7 @@ using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.EntityFrameworkCore;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Geographics
 {

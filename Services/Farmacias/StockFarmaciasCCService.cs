@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
-using SecureAPIRestWithJwtTokens.Repository.Farmacias;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services.Farmacias
 {
@@ -15,10 +15,10 @@ namespace SecureAPIRestWithJwtTokens.Services.Farmacias
     /// </summary>
     /// <param name="mapper">Mapper para la entidad dirreccion</param>
     /// <param name="stockFarmaciaCCResultRepo">Repo para el stock de farmacias Click &amp; Collect</param>
-    public class StockFarmaciasCCService(IMapper mapper, IStockFarmaciaCCRepo stockFarmaciaCCResultRepo) : IStockFarmaciaCCResultService
+    public class StockFarmaciasCCService(IMapper mapper, IGenericRepository<FarmaciaStock> stockFarmaciaCCResultRepo) : IStockFarmaciaCCResultService
     {
         private readonly IMapper _mapper = mapper;
-        private readonly IStockFarmaciaCCRepo _stockFarmaciaCCRepo = stockFarmaciaCCResultRepo;
+        private readonly IGenericRepository<FarmaciaStock> _stockFarmaciaCCRepo = stockFarmaciaCCResultRepo;
 
         /// <summary>
         /// Obtiene el stock de farmacias Click &amp; Collect para un producto específico.
@@ -27,7 +27,7 @@ namespace SecureAPIRestWithJwtTokens.Services.Farmacias
         /// <returns>Lista de StockFarmaciasResponse</returns>
         public async Task<List<StockFarmaciaDto>> GetItemsAsync(IDictionary<string, object> filtros)
         {
-            var stockFarmaciasCC = await _stockFarmaciaCCRepo.GetItemsAsync(filtros);
+            var stockFarmaciasCC = await _stockFarmaciaCCRepo.GetAllAsync(filtros);
 
             return _mapper.Map<List<StockFarmaciaDto>>(stockFarmaciasCC);
         }

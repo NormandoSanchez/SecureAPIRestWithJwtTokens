@@ -1,5 +1,5 @@
 using SecureAPIRestWithJwtTokens.Constants;
-using SecureAPIRestWithJwtTokens.Services;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Tools
 {

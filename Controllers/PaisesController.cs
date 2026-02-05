@@ -1,14 +1,13 @@
-using SecureAPIRestWithJwtTokens.Authorization;
 using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.Exceptions;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
 using SecureAPIRestWithJwtTokens.Models.Responses;
-using SecureAPIRestWithJwtTokens.Services;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Controllers;
 /// <summary>
@@ -21,8 +20,8 @@ namespace SecureAPIRestWithJwtTokens.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class PaisesController(IGenericService<PaisDto> paisService, 
-                                IMemoryCache memoryCache,
-                                ApiConfiguration configuration) : ControllerBase
+                              IMemoryCache memoryCache,
+                              ApiConfiguration configuration) : ControllerBase
 {
     private readonly IGenericService<PaisDto> _paisService = paisService;
     private readonly IMemoryCache _memoryCache = memoryCache;

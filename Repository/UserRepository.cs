@@ -1,7 +1,7 @@
 ﻿using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Models.Entities;
-using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.EntityFrameworkCore;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository
 {
@@ -10,10 +10,10 @@ namespace SecureAPIRestWithJwtTokens.Repository
     /// </summary>
     /// <remarks>Este repositorio es responsable de recuperar información de usuarios, incluidas entidades relacionadas
     /// como empleados y unidades de negocio, de la base de datos. Está diseñado para trabajar con el <see
-    /// cref="TrebolDbContext"/> y implementa la interfaz <see cref="IUserRepo"/>.</remarks>
+    /// cref="TrebolDbContext"/></remarks>
     /// <param name="context">Contexto de la base de datos.</param>
     /// <param name="logger">Instancia de logger para registrar información y errores.</param>
-    public class UserRepository(TrebolDbContext context, ILogger<UserRepository> logger) : IUserRepo
+    public class UserRepository(TrebolDbContext context, ILogger<UserRepository> logger) : IGenericRepository<Usuario>
     {
         private readonly TrebolDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
         private readonly ILogger<UserRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -28,7 +28,7 @@ namespace SecureAPIRestWithJwtTokens.Repository
         /// <returns>A <see cref="Usuario"/> object representing the user with the specified identifier, including their
         /// associated  employee and business unit data, or <see langword="null"/> if no user with the specified
         /// identifier exists.</returns>
-        public async Task<Usuario?> GetAccessByIdAsync(int id)
+        public async Task<Usuario?> GetByIdAsync(int id)
         {
             // Incluir empleado (primero) y unidades de negocio para el Usuario con acceso 
             var usuario = await _context.Usuarios.AsNoTracking()
@@ -44,11 +44,26 @@ namespace SecureAPIRestWithJwtTokens.Repository
 
             return usuario;
         }
-    }
 
-    public interface IUserRepo
-    {
-        Task<Usuario?> GetAccessByIdAsync(int id);
+        public Task<IEnumerable<Usuario>?> GetAllAsync(IDictionary<string, object>? filtros = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddAsync(Usuario entidad)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(Usuario entidad)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(int id)
+        {
+            throw new NotImplementedException();
+        }   
     }
 }
 

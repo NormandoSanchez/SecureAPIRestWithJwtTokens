@@ -7,20 +7,10 @@ using System.Text;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Constants;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services
 {
-    /// <summary>
-    /// Interfaz para el servicio JWT
-    /// </summary>
-    public interface IJwtService
-    {
-        string GenerateAccessToken(UserInfoDto userInfo);
-        string GenerateRefreshToken();
-        Task<ClaimsPrincipal?> GetPrincipalFromExpiredToken(string token);
-        Task<SessionVerifyResult> SessionVerify(HttpContext httpContext);
-    }
-
     /// <summary>
     /// Servicio para la gestión de tokens JWT
     /// </summary>

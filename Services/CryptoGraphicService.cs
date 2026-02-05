@@ -1,15 +1,10 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using SecureAPIRestWithJwtTokens.Constants;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services
 {
-    public interface ICryptoGraphicService
-    {
-        Task<string> EncriptAsync(string text);
-        Task<string> DecriptAsync(string text);
-    }
-
     /// <summary>
     /// servicio para encriptar y desencriptar texto utilizando AES.
     /// </summary>

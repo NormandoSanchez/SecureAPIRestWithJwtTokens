@@ -25,6 +25,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Extensions
 {
@@ -315,14 +317,14 @@ namespace SecureAPIRestWithJwtTokens.Extensions
         {
             // Security
             builder.Services.AddScoped<ISecurityRepo, SecurityRepository>();
-            builder.Services.AddScoped<IUserRepo, UserRepository>();
+            builder.Services.AddScoped<UserRepository, UserRepository>();
             // Geographics
             builder.Services.AddScoped<IGenericRepository<Pais>, PaisRepository>();
             builder.Services.AddScoped<IGenericRepository<ComunidadAut>, ComunidadAutRepository>();
             builder.Services.AddScoped<IGenericRepository<Provincia>, ProvinciaRepository>();
             builder.Services.AddScoped<IGenericRepository<Poblacion>, PoblacionRepository>();
             // Farmacias    
-            builder.Services.AddScoped<IStockFarmaciaCCRepo, StockFarmaciasCCRepository>();
+            builder.Services.AddScoped<StockFarmaciasCCRepository, StockFarmaciasCCRepository>();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SecureAPIRestWithJwtTokens.Tools;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
 using SecureAPIRestWithJwtTokens.Constants;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Avisos;
 

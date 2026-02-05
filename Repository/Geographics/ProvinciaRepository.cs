@@ -4,9 +4,10 @@ using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
-using SecureAPIRestWithJwtTokens.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using SecureAPIRestWithJwtTokens.Repository.Interfaces;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Geographics
 {

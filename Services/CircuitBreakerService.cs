@@ -3,21 +3,15 @@ using Microsoft.Data.SqlClient;
 using Polly;
 using Polly.CircuitBreaker;
 using System.Collections.Concurrent;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Services
 {
     /// <summary>
     /// Gestiona políticas de Circuit Breaker para conexiones a bases de datos.
-    /// Este servicio debe ser registrado como Singleton.
     /// </summary>
-    public interface ICircuitBreakerService
-    {
-        /// <summary>
-        /// Obtiene una política de Circuit Breaker para una clave de servidor única.
-        /// </summary>
-        AsyncCircuitBreakerPolicy GetCircuitBreaker(string serverKey);
-    }
-
+    /// <param name="logger"></param>
+    /// <param name="configuration"></param>
     public class CircuitBreakerService(ILogger<CircuitBreakerService> logger, ApiConfiguration configuration) : ICircuitBreakerService
     {
         private readonly ILogger<CircuitBreakerService> _logger = logger;

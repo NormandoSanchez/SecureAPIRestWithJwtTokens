@@ -44,7 +44,7 @@ public class MappingService(IMapper mapper, ILogger<MappingService> logger) : IM
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error mapeando Usuario {UsrId} a UserInfo", usuario.UsrId);
-            throw;
+            throw new InvalidOperationException($"Error mapeando Usuario {usuario.UsrId} a UserInfo", ex);
         }
     }
 
@@ -81,7 +81,7 @@ public class MappingService(IMapper mapper, ILogger<MappingService> logger) : IM
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error mapeando Direccion a string");
-            throw;
+            throw new InvalidOperationException("Error mapeando Direccion a string", ex);
         }
     }
 }

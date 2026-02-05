@@ -1,7 +1,7 @@
 ﻿using SecureAPIRestWithJwtTokens.Constants;
-using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Authorization
 {
@@ -23,9 +23,9 @@ namespace SecureAPIRestWithJwtTokens.Authorization
     /// consulta la lista de procesos permitidos para ese usuario/perfil usando AuthService.GetCodeProcessByUserAndProfileAsync,
     /// y verifica que todos los procesos requeridos estén presentes en dicha lista. Si se cumple el requisito, el contexto de autorización se marca como exitoso.
     /// </remarks>
-    public class ProcesoClaimHandler(Services.IAuthService authService) : AuthorizationHandler<ProcesoClaimRequirement>
+    public class ProcesoClaimHandler(IAuthService authService) : AuthorizationHandler<ProcesoClaimRequirement>
     {
-        private readonly Services.IAuthService _authService = authService;
+        private readonly IAuthService _authService = authService;
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, 
                                                              ProcesoClaimRequirement requirement)

@@ -2,9 +2,9 @@ using SecureAPIRestWithJwtTokens.Authorization;
 using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Responses;
-using SecureAPIRestWithJwtTokens.Services;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.AspNetCore.Mvc;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 
 namespace SecureAPIRestWithJwtTokens.Controllers
 {
