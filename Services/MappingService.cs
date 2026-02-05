@@ -1,18 +1,10 @@
 using AutoMapper;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
+using SecureAPIRestWithJwtTokens.Services.Interfaces;
 using SecureAPIRestWithJwtTokens.Tools;
 
 namespace SecureAPIRestWithJwtTokens.Services;
-
-/// <summary>
-/// Interfaz para el servicio de mapeo
-/// </summary>
-public interface IMappingService
-{
-    UserInfoDto MapUsuarioToUserInfo(Usuario usuario);
-    Task<UserInfoDto> MapUsuarioToUserInfoAsync(Usuario usuario);
-}
 
 /// <summary>
 /// Servicio para mapeos específicos de la aplicación
