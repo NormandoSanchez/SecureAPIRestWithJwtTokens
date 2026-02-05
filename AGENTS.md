@@ -1,8 +1,92 @@
-# Guía de Normas y Buenas Prácticas para clases en C# (.NET)
+# AGENTS.md
 
-Este documento presenta las normas y buenas prácticas recomendadas para desarrollar por ejemplo, clases de servicios,  controladores, etc. en el proyecto **SecureAPIRestWithJwtTokens**, empleando C# y el ecosistema .NET. Aplica las convenciones modernas y más aceptadas en la comunidad profesional.
+This file provides guidance to WARP (warp.dev) when working with code in this repository.
+
+## Build and Run Commands
+
+```powershell
+# Restore dependencies
+dotnet restore
+
+# Build (Debug)
+dotnet build
+
+# Build (Release)
+dotnet build -c Release
+
+# Run in development
+dotnet run --project SecureAPIRestWithJwtTokens.csproj
+
+# Publish for production
+dotnet publish -c Release -o ./publish
+```
+
+The API runs at `https://localhost:7017` with Swagger UI at the root.
+
+## Architecture Overview
+
+### Request Flow
+```
+HTTP Request → GlobalExceptionHandlerMiddleware → Controller → Service → Repository → TrebolDbContext (EF Core) → SQL Server
+```
+
+### Key Layers
+- **Controllers/**: REST endpoints, receive DTOs, return `ApiResponse<T>` via `ApiResponseBuilder`
+- **Services/**: Business logic, injected via interfaces (e.g., `IGenericService<T>`)
+- **Repository/**: Data access via EF Core, implements `IGenericRepository<T>`
+- **DataContexts/**: `TrebolDbContext` - main EF Core context with encrypted connection strings
+
+### Service Registration
+All DI registration happens in `Extensions/WebApplicationExtensions.cs`:
+- `AddServices()` - configures all services, auth, caching, CORS
+- `ConfigureDbContext()` - sets up EF Core with decrypted connection strings
+- `ConfigurePipeline()` - middleware order and HTTP pipeline
+
+### Authentication Flow (JWT with HttpOnly Cookies)
+1. `POST /api/auth/login` validates credentials via `AuthService`
+2. `JwtService` generates access/refresh tokens
+3. Tokens stored in HttpOnly cookies (`access_token`, `refresh_token`)
+4. `JwtBearerEvents.OnMessageReceived` extracts token from cookie (not headers)
+
+### Custom Authorization
+Use `[ProcesoAuthorize("PROCESS_CODE")]` attribute for process-based authorization:
+```csharp
+[ProcesoAuthorize("ADM001", "ADM002")]  // Requires any of these process codes
+public async Task<IActionResult> SomeEndpoint() { ... }
+```
+Handler: `Authorization/ProcesoClaimHandler.cs`
+
+### Cryptographic Services (Keyed DI)
+Two crypto services exist for internal vs external encryption:
+```csharp
+// Internal (default) - for DB passwords, connection strings
+ICryptoGraphicService internalCrypto
+
+// External (keyed) - for client-submitted encrypted data
+[FromKeyedServices("external")] ICryptoGraphicService externalCrypto
+```
+
+### Parallel SQL Execution (Multi-Server)
+For executing queries across 70+ remote databases:
+```csharp
+IParallelSqlExecutor<DataTable>  // For SELECT queries
+IParallelSqlExecutor<int>        // For INSERT/UPDATE/DELETE commands
+```
+Uses `CircuitBreakerService` to handle unavailable servers gracefully. Configuration in `appsettings.json` under `Resilience`.
+
+### Response Pattern
+All endpoints return standardized responses:
+```csharp
+return Ok(ApiResponseBuilder.Success(data, "Message"));
+return BadRequest(ApiResponseBuilder.Error<T>("Error", statusCode, null, traceId));
+return Unauthorized(ApiResponseBuilder.Unauthorized<T>("Message", traceId));
+```
 
 ---
+
+# Guía de Normas y Buenas Prácticas para clases en C# (.NET)
+
+Convenciones de desarrollo para el proyecto **SecureAPIRestWithJwtTokens**.
 
 ## 1. Estructura y Organización del Código
 
