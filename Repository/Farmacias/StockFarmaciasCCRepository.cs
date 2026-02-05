@@ -4,7 +4,6 @@ using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
-using SecureAPIRestWithJwtTokens.Services;
 using SecureAPIRestWithJwtTokens.Tools;
 using Microsoft.EntityFrameworkCore;
 using System.Data;

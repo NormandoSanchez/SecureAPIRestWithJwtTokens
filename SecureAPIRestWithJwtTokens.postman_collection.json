@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "SecureAPIRestWithJwtTokens",
+		"description": "Colección de API para autenticación con JWT Tokens",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "0"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"extra\",\n  \"encryptedPassword\": \"Rlry7/GmY/0N6ZUDbYqqew==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"login"
+							]
+						},
+						"description": "Autentica un usuario y devuelve tokens de acceso y refresco.\n\n**Parámetros del body:**\n- `userName` (string, requerido): Nombre de usuario (máximo 15 caracteres)\n- `encryptedPassword` (string, requerido): Contraseña del usuario (entre 3 y 25 caracteres)\n\n**Respuestas:**\n- `200 OK`: Login exitoso con tokens generados\n- `400 Bad Request`: Credenciales inválidas\n- `401 Unauthorized`: Credenciales incorrectas"
+					},
+					"response": [
+						{
+							"name": "Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userName\": \"extra\",\n  \"encryptedPassword\": \"Rlry7/GmY/0N6ZUDbYqqew==\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Login exitoso\",\n  \"data\": {\n    \"expiresAt\": \"2026-02-05T12:00:00Z\",\n    \"tokenType\": \"Bearer\"\n  },\n  \"traceId\": \"0HMVQR8F7LQRT:00000001\"\n}"
+						},
+						{
+							"name": "Login Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userName\": \"Usuario\",\n  \"encryptedPassword\": \"wrongpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Credenciales incorrectas\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000002\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Session Verify",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/session/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"session",
+								"verify"
+							]
+						},
+						"description": "Verifica si el usuario tiene una sesión activa válida.\n\n**Nota:** Este endpoint utiliza las cookies HttpOnly establecidas durante el login para validar la sesión. No requiere enviar tokens en el body o headers.\n\n**Respuestas:**\n- `200 OK`: Sesión válida con información del usuario\n- `401 Unauthorized`: Sesión inválida o expirada"
+					},
+					"response": [
+						{
+							"name": "Session Valid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/session/verify",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"session",
+										"verify"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Sesión válida\",\n  \"data\": {\n    \"isValid\": true,\n    \"userName\": \"Usuario\",\n    \"userId\": 123,\n    \"expiresAt\": \"2026-02-05T12:00:00Z\"\n  },\n  \"traceId\": \"0HMVQR8F7LQRT:00000003\"\n}"
+						},
+						{
+							"name": "Session Invalid",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/session/verify",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"session",
+										"verify"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Sesión inválida o expirada\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000004\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7017",
+			"type": "string"
+		}
+	]
+}

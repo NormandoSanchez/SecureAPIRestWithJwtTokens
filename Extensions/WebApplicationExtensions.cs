@@ -1,5 +1,4 @@
 ﻿using SecureAPIRestWithJwtTokens.Authorization;
-using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Exceptions;
 using SecureAPIRestWithJwtTokens.Middleware;
@@ -324,7 +323,7 @@ namespace SecureAPIRestWithJwtTokens.Extensions
             builder.Services.AddScoped<IGenericRepository<Provincia>, ProvinciaRepository>();
             builder.Services.AddScoped<IGenericRepository<Poblacion>, PoblacionRepository>();
             // Farmacias    
-            builder.Services.AddScoped<StockFarmaciasCCRepository, StockFarmaciasCCRepository>();
+            builder.Services.AddScoped<IGenericRepository<FarmaciaStock>, StockFarmaciasCCRepository>();
         }
 
         /// <summary>
