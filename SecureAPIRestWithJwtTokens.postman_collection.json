@@ -234,6 +234,196 @@
 							"body": "{\n  \"success\": false,\n  \"message\": \"Sesión inválida o expirada\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000004\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"refresh"
+							]
+						},
+						"description": "Refresca los tokens de acceso usando los tokens de las cookies HttpOnly.\n\n**Nota:** Este endpoint utiliza las cookies HttpOnly establecidas durante el login. No requiere enviar tokens en el body o headers.\n\n**Respuestas:**\n- `200 OK`: Tokens refrescados exitosamente\n- `400 Bad Request`: Datos inválidos\n- `401 Unauthorized`: Token de refresco inválido o expirado"
+					},
+					"response": [
+						{
+							"name": "Refresh Token Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Tokens refrescados para el usuario 123\",\n  \"data\": {\n    \"expiresAt\": \"2026-02-05T12:00:00Z\",\n    \"tokenType\": \"Bearer\"\n  },\n  \"traceId\": \"0HMVQR8F7LQRT:00000005\"\n}"
+						},
+						{
+							"name": "Refresh Token Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000006\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"logout"
+							]
+						},
+						"description": "Cierra la sesión del usuario: revoca el refresh token y elimina las cookies de autenticación.\n\n**Nota:** Este endpoint utiliza las cookies HttpOnly establecidas durante el login. No requiere enviar tokens en el body o headers.\n\n**Respuestas:**\n- `200 OK`: Sesión cerrada exitosamente\n- `401 Unauthorized`: Usuario no autenticado o datos inválidos"
+					},
+					"response": [
+						{
+							"name": "Logout Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Sesión cerrada.\",\n  \"data\": \"Logout realizado para el usuario 123\",\n  \"traceId\": \"0HMVQR8F7LQRT:00000007\"\n}"
+						},
+						{
+							"name": "Logout Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"logout"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000008\"\n}"
+						}
+					]
 				}
 			]
 		}

@@ -84,7 +84,7 @@ namespace SecureAPIRestWithJwtTokens.Services
                     ValidIssuer = _jwtOptions.Issuer,
                     ValidateAudience = false,
                     // ValidAudience = _jwtOptions.Audience, // Audiencia no se valida
-                    ValidateLifetime = true,
+                    ValidateLifetime = false, // No validar expiración para permitir leer tokens expirados
                     ClockSkew = TimeSpan.Zero
                 };
 

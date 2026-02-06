@@ -7,14 +7,17 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
 ## b. Historia 
 El entorno de explotación para este proyecto es el siguiente:
    Numerosos centros de explotación (70+), cada uno es un negocio propiedad de diferentes empresas
-   Cada centro de explotación dispone de un sistema informático propio para su gestión interna. Todos los centros de explotación disponen del mismo sistema en servidores propios. estos servidores son accesibles. Pero pueden sufrir desconexiones puntuales por averia u otras indicencias.
+   Cada centro de explotación dispone de un sistema informático propio para su gestión interna. Todos los centros de explotación disponen del mismo sistema en servidores propios.
+   Estos servidores son accesibles, pero pueden sufrir desconexiones puntuales por averia u otras indicencias.
 
-   El sistema de gestión de los centros de explotación no es gestionado por la organización, es un paquete comercial con acceso a la base de datos. El conocimiento de este paquete es amplio pero no completo.       
+   La aplicación de gestión de los centros de explotación no es gestionado por la organización, es un paquete comercial.
+   El conocimiento de este paquete es amplio pero no completo. Se dispone de acceso completo a la base de datos SQL de este paquete.       
 
    En una ubicación que denominaremos Central, se alojará el resultado de este prouyecto (API)
-   En Central se mantiene una base de datos que debe alimentar y mantener sincronidad con cada uno de los sistemas propios de gestión. Artículos, clientes, etc.
+   En Central se mantiene una base de datos que debe alimentar y mantener sincronización con cada uno de los sistemas propios de gestión. Artículos, Clientes, etc.
    Uno problemática principal es la seguridad, para prevenir ingerencias tanto en central como en los centros de explotación.      
-   Tambien para mantener el sincronismo es necesario ejecutar una query (SQL) en cada uno de los centros de explotación, asegurando que se ha ejecutado correctamente o en su defecto mantener un control de los fallos para realizar repeticiones. Dado el número de centros y las posibles incidencias es necesario:
+   Tambien para mantener el sincronismo es necesario ejecutar queries (SQL) en cada uno de los centros de explotación, asegurando que se ha ejecutado correctamente o en su defecto mantener un control de los fallos para realizar repeticiones.
+   Dado el número de centros y las posibles incidencias es necesario:
       - Obviar aquellos centros que se encuentren con conexión perdida.
       - Retomar centros tras subsanación de la incidenia de conexión.
       - Ejecucion en paralelo en varios centros simultaneamente.        
@@ -83,8 +86,10 @@ cd publish
 dotnet SecureAPIRestWithJwtTokens.dll
 ```
 
-### Archivo de pruebas HTTP
-El proyecto incluye `SecureAPIRestWithJwtTokens.http` con ejemplos de todas las peticiones disponibles para probar los endpoints.
+### Archivos de pruebas
+El proyecto incluye:
+- `SecureAPIRestWithJwtTokens.http` - Ejemplos de todas las peticiones disponibles para probar los endpoints
+- `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados
 
 
 ## e. Estructura del proyecto
@@ -255,6 +260,7 @@ Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens
 - [Guía de buenas prácticas (AGENTS.md)](AGENTS.md) - Normas de desarrollo del proyecto
 - [Documentación de seguridad (SECURITY.md)](SECURITY.md) - Políticas y configuración de seguridad
 - [Colección de peticiones HTTP](SecureAPIRestWithJwtTokens.http) - Ejemplos de uso de la API
+- [Colección Postman](SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
 - [Ejemplo de uso de ParallelSqlExecutor](Services/Examples/ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
 - [Ejemplo de uso de SqlDataService](Services/Examples/SqlDataService.md) - Uso práctico del servicio de datos SQL
 

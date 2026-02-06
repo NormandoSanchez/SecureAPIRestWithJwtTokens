@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using SecureAPIRestWithJwtTokens.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SecureAPIRestWithJwtTokens.Controllers
 {
@@ -272,6 +273,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
 
         /// <summary>
         /// Verifica si el usuario tiene una sesión activa válida
+        /// Necesario que el usuario esté autenticado (token de acceso válido en cookie HttpOnly) para acceder a esta ruta.
         /// </summary>
         /// <returns>Información de la sesión si es válida</returns>
         /// <response code="200">Sesión válida con información del usuario</response>
@@ -279,6 +281,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         [HttpGet("session/verify")]
         [ProducesResponseType(typeof(ApiResponse<SessionVerifyResult>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+        [Authorize]
         public async Task<IActionResult> SessionVerify()
         {
             string _msg;
@@ -318,6 +321,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         [ProducesResponseType(typeof(ApiResponse<List<AuthProcessDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [HttpGet("processes/mainModules")]
+        [Authorize]
         public async Task<IActionResult> GetMainModules()
         {
             return await HandleUserProfileAction(

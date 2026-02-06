@@ -1,4 +1,5 @@
 ﻿using SecureAPIRestWithJwtTokens.Authorization;
+using SecureAPIRestWithJwtTokens.Constants;
 using SecureAPIRestWithJwtTokens.DataContexts;
 using SecureAPIRestWithJwtTokens.Exceptions;
 using SecureAPIRestWithJwtTokens.Middleware;
@@ -401,7 +402,7 @@ namespace SecureAPIRestWithJwtTokens.Extensions
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false, // No validar audience ya que no se establece al generar el token
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtOptions.Issuer,
@@ -414,7 +415,7 @@ namespace SecureAPIRestWithJwtTokens.Extensions
                         // Fuerza uso exclusivo de cookie HttpOnly para el token
                         OnMessageReceived = context =>
                         {
-                            if (context.Request.Cookies.TryGetValue("access_token", out var tokenFromCookie))
+                            if (context.Request.Cookies.TryGetValue(AuthConstants.AUTH_COOKIE_ACCESS, out var tokenFromCookie))
                             {
                                 context.Token = tokenFromCookie;
                             }
