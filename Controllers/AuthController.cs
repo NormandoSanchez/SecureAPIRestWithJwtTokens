@@ -348,6 +348,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
 
         /// <summary>
         /// Obtiene los procesos opciones de menú de un modulo, asociados al perfil del usuario autenticado
+        /// Requiere que el usuario esté autenticado (token de acceso válido en cookie HttpOnly) para acceder a esta ruta.
         /// </summary>
         /// <param name="idModulo">Código del módulo para filtrar las opciones de menú</param>
         /// <returns></returns>
@@ -356,6 +357,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         [ProducesResponseType(typeof(ApiResponse<List<AuthProcessDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [HttpGet("processes/menuOptions")]
+        [Authorize]
         public async Task<IActionResult> GetMenuOptions([FromQuery] string? idModulo = null)
         {
             return await HandleUserProfileAction(
@@ -386,6 +388,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
 
         /// <summary>
         /// Obtiene los códigos de procesos autorizados del usuario autenticado
+        /// Requiere que el usuario esté autenticado (token de acceso válido en cookie HttpOnly) para acceder a esta ruta.
         /// </summary>
         /// <returns>Lista de códigos de procesos autorizados</returns>
         /// <response code="200">Lista de códigos de procesos autorizados obtenida exitosamente</response>
@@ -393,6 +396,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         [ProducesResponseType(typeof(ApiResponse<List<string>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [HttpGet("processes/Codes")]
+        [Authorize]
         public async Task<IActionResult> GetAuthProcessCodes()
         {
             return await HandleUserProfileAction(
