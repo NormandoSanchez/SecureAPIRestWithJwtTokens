@@ -424,6 +424,313 @@
 							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000008\"\n}"
 						}
 					]
+				},
+				{
+					"name": "Get Main Modules",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/processes/mainModules",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"processes",
+								"mainModules"
+							]
+						},
+						"description": "Obtiene los módulos principales asociados al perfil del usuario autenticado.\n\n**Nota:** Requiere autenticación (token de acceso válido en cookie HttpOnly).\n\n**Respuestas:**\n- `200 OK`: Lista de módulos obtenida exitosamente\n- `401 Unauthorized`: Usuario no autenticado o datos inválidos"
+					},
+					"response": [
+						{
+							"name": "Get Main Modules Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/mainModules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"mainModules"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Módulos obtenidos correctamente para Usuario\",\n  \"data\": [\n    {\n      \"idProceso\": \"MOD001\",\n      \"nombreProceso\": \"Administración\",\n      \"descripcion\": \"Módulo de administración del sistema\",\n      \"icono\": \"settings\",\n      \"orden\": 1\n    },\n    {\n      \"idProceso\": \"MOD002\",\n      \"nombreProceso\": \"Ventas\",\n      \"descripcion\": \"Módulo de gestión de ventas\",\n      \"icono\": \"shopping_cart\",\n      \"orden\": 2\n    }\n  ],\n  \"traceId\": \"0HMVQR8F7LQRT:00000009\"\n}"
+						},
+						{
+							"name": "Get Main Modules Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/mainModules",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"mainModules"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000010\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Menu Options",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/processes/menuOptions?idModulo=MOD001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"processes",
+								"menuOptions"
+							],
+							"query": [
+								{
+									"key": "idModulo",
+									"value": "MOD001",
+									"description": "Código del módulo para filtrar las opciones de menú (opcional)"
+								}
+							]
+						},
+						"description": "Obtiene las opciones de menú de un módulo, asociadas al perfil del usuario autenticado.\n\n**Parámetros de query:**\n- `idModulo` (string, opcional): Código del módulo para filtrar las opciones de menú\n\n**Nota:** Requiere autenticación (token de acceso válido en cookie HttpOnly).\n\n**Respuestas:**\n- `200 OK`: Lista de opciones de menú obtenida exitosamente\n- `401 Unauthorized`: Usuario no autenticado o datos inválidos"
+					},
+					"response": [
+						{
+							"name": "Get Menu Options Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/menuOptions?idModulo=MOD001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"menuOptions"
+									],
+									"query": [
+										{
+											"key": "idModulo",
+											"value": "MOD001"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Opciones de menú obtenidas correctamente para Usuario\",\n  \"data\": [\n    {\n      \"idProceso\": \"MEN001\",\n      \"nombreProceso\": \"Usuarios\",\n      \"descripcion\": \"Gestión de usuarios del sistema\",\n      \"icono\": \"people\",\n      \"orden\": 1,\n      \"ruta\": \"/admin/usuarios\"\n    },\n    {\n      \"idProceso\": \"MEN002\",\n      \"nombreProceso\": \"Perfiles\",\n      \"descripcion\": \"Gestión de perfiles y permisos\",\n      \"icono\": \"shield\",\n      \"orden\": 2,\n      \"ruta\": \"/admin/perfiles\"\n    }\n  ],\n  \"traceId\": \"0HMVQR8F7LQRT:00000011\"\n}"
+						},
+						{
+							"name": "Get Menu Options Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/menuOptions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"menuOptions"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000012\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Auth Process Codes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/processes/Codes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"processes",
+								"Codes"
+							]
+						},
+						"description": "Obtiene los códigos de procesos autorizados del usuario autenticado.\n\n**Nota:** Requiere autenticación (token de acceso válido en cookie HttpOnly).\n\n**Respuestas:**\n- `200 OK`: Lista de códigos de procesos autorizados obtenida exitosamente\n- `401 Unauthorized`: Usuario no autenticado o datos inválidos"
+					},
+					"response": [
+						{
+							"name": "Get Auth Process Codes Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/Codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"Codes"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"message\": \"Códigos de procesos obtenidos correctamente para Usuario\",\n  \"data\": [\n    \"ADM001\",\n    \"ADM002\",\n    \"VEN001\",\n    \"VEN002\",\n    \"INV001\",\n    \"REP001\"\n  ],\n  \"traceId\": \"0HMVQR8F7LQRT:00000013\"\n}"
+						},
+						{
+							"name": "Get Auth Process Codes Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/processes/Codes",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"processes",
+										"Codes"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"Autenticación fallida\",\n  \"data\": null,\n  \"traceId\": \"0HMVQR8F7LQRT:00000014\"\n}"
+						}
+					]
 				}
 			]
 		}
