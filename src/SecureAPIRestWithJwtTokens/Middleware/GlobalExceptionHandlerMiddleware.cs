@@ -7,12 +7,10 @@ namespace SecureAPIRestWithJwtTokens.Middleware;
 
 public class GlobalExceptionHandlerMiddleware(
     RequestDelegate next,
-    ILogger<GlobalExceptionHandlerMiddleware> logger,
-    IServiceProvider serviceProvider)
+    IExceptionHandlerService exceptionHandlerService)
 {
     private readonly RequestDelegate _next = next;
-    private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger = logger;
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IExceptionHandlerService _exceptionHandlerService = exceptionHandlerService;
 
     private readonly JsonSerializerOptions jsonOptions = new()
     {
@@ -41,15 +39,11 @@ public class GlobalExceptionHandlerMiddleware(
         context.Response.Headers.Pragma = "no-cache";
         context.Response.Headers.Expires = "0";
 
-        // Get the exception handler service from DI
-        using var scope = _serviceProvider.CreateScope();
-        var exceptionHandlerService = scope.ServiceProvider.GetRequiredService<IExceptionHandlerService>();
-        
         // Log the exception
-        exceptionHandlerService.LogException(exception, traceId, context);
+        _exceptionHandlerService.LogException(exception, traceId, context);
 
         // Create response
-        var response = exceptionHandlerService.CreateErrorResponse(exception, traceId);
+        var response = _exceptionHandlerService.CreateErrorResponse(exception, traceId);
 
         // Set response
         context.Response.ContentType = "application/json";
@@ -58,14 +52,4 @@ public class GlobalExceptionHandlerMiddleware(
         var jsonResponse = JsonSerializer.Serialize(response, jsonOptions);
         await context.Response.WriteAsync(jsonResponse);
     }
-
-    private static HttpStatusCode GetStatusCode(Exception exception) =>
-        exception switch
-        {
-            SimpleNotFoundException => HttpStatusCode.NotFound,
-            FechaInvalidaException => HttpStatusCode.BadRequest,
-            ValidationException => HttpStatusCode.UnprocessableEntity,
-            ArgumentException => HttpStatusCode.BadRequest,
-            _ => HttpStatusCode.InternalServerError
-        };
 }

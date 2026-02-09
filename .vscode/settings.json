@@ -1,0 +1,8 @@
+{
+    "dotnet.defaultSolution": "SecureAPIRestWithJwtTokens.sln",
+    "omnisharp.defaultLaunchSolution": "SecureAPIRestWithJwtTokens.sln",
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true
+    }
+}

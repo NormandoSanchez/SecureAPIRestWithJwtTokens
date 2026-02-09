@@ -165,13 +165,13 @@ namespace SecureAPIRestWithJwtTokens.Extensions
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Custom Services
-            builder.Services.AddScoped<IExceptionHandlerService, ExceptionHandlerMiddleware>();
+            builder.Services.AddSingleton<IExceptionHandlerService, ExceptionHandlerMiddleware>();
             // Servicio de encriptación (interno por defecto) y variante externa (keyed)
             // Debe estar registrado antes que IJwtService
             builder.Services.AddSingleton<ICryptoGraphicService, CryptoGraphicService>(sp => new CryptoGraphicService(true));
             builder.Services.AddKeyedSingleton<ICryptoGraphicService>("external", (sp, _) => new CryptoGraphicService(false));
             builder.Services.AddTransient<ConnectionStringHelper>(); // Cada vez que se inyecte, se crea una nueva instancia
-            builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddSingleton<IJwtService, JwtService>();
                         
             // Opciones JWT con clave ya desencriptada
             AddJWTOptions( builder);

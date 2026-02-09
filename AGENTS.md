@@ -27,10 +27,7 @@ The API runs at `https://localhost:7017` with Swagger UI at the root.
 
 ### Request Flow
 
-```
-
 HTTP Request → GlobalExceptionHandlerMiddleware → Controller → Service → Repository → TrebolDbContext (EF Core) → SQL Server
-```
 
 ### Key Layers
 

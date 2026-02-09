@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SecureAPIRestWithJwtTokens.Models.Entities;
+﻿namespace SecureAPIRestWithJwtTokens.Models.Entities;
 
 public partial class FormasPagoDia
 {
