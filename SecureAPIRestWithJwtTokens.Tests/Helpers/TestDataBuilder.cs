@@ -163,4 +163,53 @@ public static class TestDataBuilder
             UnnDbname = "treboldb"
         };
     }
+
+    public static Pais CreatePais(int id = 1, string nombre = "España")
+    {
+        return new Pais
+        {
+            PaiId = id,
+            PaiNombre = nombre
+        };
+    }
+
+    public static ComunidadAut CreateComunidadAut(int id = 1, string nombre = "Madrid", int paisId = 1, Pais? pais = null)
+    {
+        var assignedPais = pais ?? CreatePais(paisId);
+        return new ComunidadAut
+        {
+            CauId = id,
+            CauNombre = nombre,
+            PaiId = paisId,
+            CauExencionIva = false,
+            CauConsejo = null,
+            Pais = assignedPais
+        };
+    }
+
+    public static Provincia CreateProvincia(int id = 1, string nombre = "Madrid", int comunidadAutId = 1, int paisId = 1, ComunidadAut? comunidadAut = null)
+    {
+        var assignedComunidadAut = comunidadAut ?? CreateComunidadAut(comunidadAutId, nombre, paisId);
+        return new Provincia
+        {
+            PrvId = id,
+            PrvNombre = nombre,
+            CauId = comunidadAutId,
+            PaiId = paisId,
+            ComunidadAutonoma = assignedComunidadAut
+        };
+    }
+
+    public static Poblacion CreatePoblacion(int id = 1, string nombre = "Madrid", int provinciaId = 1, int paisId = 1, Provincia? provincia = null)
+    {
+        var assignedProvincia = provincia ?? CreateProvincia(provinciaId, nombre, 1, paisId);
+        return new Poblacion
+        {
+            PobId = id,
+            PobNombre = nombre,
+            PrvId = provinciaId,
+            PaiId = paisId,
+            Provincia = assignedProvincia
+        };
+    }
 }

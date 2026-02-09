@@ -83,7 +83,7 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
         public async Task UpdateAsync(Pais pais)
         {
             ArgumentNullException.ThrowIfNull(pais);
-            var paisDb = await _context.Paises.AsNoTracking()
+            var paisDb = await _context.Paises
                                 .FirstOrDefaultAsync(p => p.PaiId == pais.PaiId) ?? throw new InvalidOperationException($"El país con ID {pais.PaiId} no existe.");
             try
             {
