@@ -4,23 +4,25 @@
 
 API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, gestión de cookies HttpOnly seguras, y arquitectura modular escalable. El proyecto implementa patrones de diseño avanzados como Repository, Circuit Breaker, y autorización basada en políticas personalizadas.
 
-## b. Historia 
-El entorno de explotación para este proyecto es el siguiente:
+## b. Historia
+
+   El entorno de explotación para este proyecto es el siguiente:
    Numerosos centros de explotación (70+), cada uno es un negocio propiedad de diferentes empresas
    Cada centro de explotación dispone de un sistema informático propio para su gestión interna. Todos los centros de explotación disponen del mismo sistema en servidores propios.
-   Estos servidores son accesibles, pero pueden sufrir desconexiones puntuales por averia u otras indicencias.
+   Estos servidores son accesibles, pero pueden sufrir desconexiones puntuales por averia u otras incidencias.
 
    La aplicación de gestión de los centros de explotación no es gestionado por la organización, es un paquete comercial.
-   El conocimiento de este paquete es amplio pero no completo. Se dispone de acceso completo a la base de datos SQL de este paquete.       
+   El conocimiento de este paquete es amplio pero no completo. Se dispone de acceso completo a la base de datos SQL de este paquete.
 
-   En una ubicación que denominaremos Central, se alojará el resultado de este prouyecto (API)
+   En una ubicación que denominaremos Central, se alojará el resultado de este proyecto (API)
    En Central se mantiene una base de datos que debe alimentar y mantener sincronización con cada uno de los sistemas propios de gestión. Artículos, Clientes, etc.
-   Uno problemática principal es la seguridad, para prevenir ingerencias tanto en central como en los centros de explotación.      
-   Tambien para mantener el sincronismo es necesario ejecutar queries (SQL) en cada uno de los centros de explotación, asegurando que se ha ejecutado correctamente o en su defecto mantener un control de los fallos para realizar repeticiones.
+   Las principales problemáticas a cubrir son:
+      Seguridad.
+      Sincronización, es necesario ejecutar queries (SQL) en cada uno de los centros de explotación, asegurando que se ha ejecutado correctamente o en su defecto mantener un control de los fallos para realizar repeticiones.
    Dado el número de centros y las posibles incidencias es necesario:
       - Obviar aquellos centros que se encuentren con conexión perdida.
       - Retomar centros tras subsanación de la incidenia de conexión.
-      - Ejecucion en paralelo en varios centros simultaneamente.        
+      - Ejecucion en paralelo en varios centros simultaneamente.
 
 ## c. Stack tecnológico utilizado
 
@@ -34,35 +36,43 @@ El entorno de explotación para este proyecto es el siguiente:
 - **Mapeo:** AutoMapper 13.0
 - **API Documentation:** Swagger/OpenAPI 9.0
 - **Gestión de dependencias:** NuGet
-- **Seguridad:** 
-    - Cifrado personalizado de datos sensibles
-    - Sanitización de entradas
-    - Autorización basada en políticas y claims
+- **Seguridad:**
+  - Cifrado personalizado de datos sensibles
+  - Sanitización de entradas
+  - Autorización basada en políticas y claims
 - **Otros:**
-    - Inyección de dependencias nativa
-    - Middleware personalizado para manejo global de excepciones
-    - Cache distribuido para optimización
+  - Inyección de dependencias nativa
+  - Middleware personalizado para manejo global de excepciones
+  - Cache distribuido para optimización
 
 ## d. Información sobre su instalación y ejecución
 
 ### Prerrequisitos
+
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) o superior
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superior
 - Editor recomendado: Visual Studio 2022, Visual Studio Code o JetBrains Rider
 
 ### Instalación
+
 1. Clona el repositorio:
+
    ```bash
    git clone https://github.com/NormandoSanchez/SecureAPIRestWithJwtTokens.git
    ```
+
 2. Accede al directorio del proyecto:
+
    ```bash
    cd SecureAPIRestWithJwtTokens
    ```
+
 3. Restaura los paquetes NuGet:
+
    ```bash
    dotnet restore
    ```
+
 4. Configura las cadenas de conexión en `appsettings.json` o `appsettings.Development.json`:
    - Actualiza las conexiones a la base de datos
    - Configura las claves JWT y parámetros de seguridad
@@ -71,14 +81,18 @@ El entorno de explotación para este proyecto es el siguiente:
 ### Ejecución
 
 #### Desarrollo
+
 ```bash
 dotnet run --project SecureAPIRestWithJwtTokens.csproj
 ```
+
 La API estará disponible en:
-- HTTPS: `https://localhost:7017/index.html` 
+
+- HTTPS: `https://localhost:7017/index.html`
 - Swagger UI: `https://localhost:7017/index.html`
 
 #### Producción
+
 ```bash
 dotnet build -c Release
 dotnet publish -c Release -o ./publish
@@ -87,10 +101,11 @@ dotnet SecureAPIRestWithJwtTokens.dll
 ```
 
 ### Archivos de pruebas
+
 El proyecto incluye:
+
 - `SecureAPIRestWithJwtTokens.http` - Ejemplos de todas las peticiones disponibles para probar los endpoints
 - `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados
-
 
 ## e. Estructura del proyecto
 
@@ -176,28 +191,33 @@ SecureAPIRestWithJwtTokens/
 
 ## f. Funcionalidades principales
 
+Las funciones principales solo incluyen una mínima parte de todas las funciones necesarias.
+Por confidencialidad y tiempo, solo se incluyen las básicas.
+El objetivo es deostrar que el proyecto es sólido.
+
 ### Seguridad y Autenticación
+
 - **Autenticación JWT:** Tokens seguros con cookies HttpOnly para prevenir ataques XSS
 - **Autorización personalizada:** Sistema basado en políticas, claims y atributos personalizados
 - **Cifrado de datos sensibles:** Servicio de criptografía para cadenas de conexión y datos críticos
 - **Sanitización de entradas:** Protección contra inyección SQL y XSS
 
 ### Gestión Geográfica
-- **Países, Provincias y Comunidades Autónomas:** CRUD completo con filtros avanzados
-- **Poblaciones:** Gestión jerárquica de ubicaciones
+
+- **Países, Comunidades Autónomas, Provincias y Poblaciones:** CRUD básico con filtros avanzados
 
 ### Farmacias
-- **Click & Collect:** Sistema de pedidos y recogida en farmacia
-- **Gestión de stock:** Control de inventario y disponibilidad
+
+- **Stock Click & Collect:** Obtención de stock en centros para servicio Click & Collect
 
 ### Avisos y Notificaciones
+
 - **Avisos internos:** Sistema de comunicación entre usuarios y módulos del sistema
-- **Filtros avanzados:** Búsqueda por estado, usuario, fechas y módulo
 
 ### Características técnicas
+
 - **Circuit Breaker:** Resiliencia en llamadas a servicios externos con Polly
 - **Ejecución paralela:** Optimización de consultas SQL mediante paralelización
-
 - **Cache distribuido:** Sistema de caché para mejorar el rendimiento
 - **Logging estructurado:** Serilog con salidas a consola y archivos rotativos
 - **Manejo global de excepciones:** Middleware centralizado para respuestas consistentes
@@ -208,6 +228,7 @@ SecureAPIRestWithJwtTokens/
 ## g. Arquitectura y patrones de diseño
 
 ### Patrones implementados
+
 - **Repository Pattern:** Abstracción de la capa de acceso a datos
 - **Service Layer:** Separación de lógica de negocio
 - **Dependency Injection:** Inversión de control mediante inyección de dependencias
@@ -216,6 +237,7 @@ SecureAPIRestWithJwtTokens/
 - **DTO Pattern:** Transferencia de datos desacoplada de entidades
 
 ### Arquitectura
+
 - **Arquitectura en capas:** Separación clara entre Controllers → Services → Repository → DataContext
 - **Primary Constructors:** Uso de constructores principales de C# 12
 - **Middleware Pipeline:** Procesamiento de peticiones mediante middlewares personalizados
@@ -224,23 +246,27 @@ SecureAPIRestWithJwtTokens/
 ## h. Endpoints principales
 
 ### Autenticación
+
 - `POST /api/auth/login` - Autenticación de usuarios
 - `POST /api/auth/refresh` - Renovación de tokens
 - `POST /api/auth/logout` - Cierre de sesión
 
 ### Geografía
+
 - `GET /api/paises` - Listado de países
 - `GET /api/provincias` - Listado de provincias
 - `GET /api/comunidadesaut` - Listado de comunidades autónomas
 - `GET /api/poblaciones` - Listado de poblaciones
 
 ### Avisos
+
 - `GET /api/avisos` - Listado de avisos
 - `POST /api/avisos` - Crear nuevo aviso
 - `PUT /api/avisos/{id}` - Actualizar aviso
 - `DELETE /api/avisos/{id}` - Eliminar aviso
 
 ### Click & Collect
+
 - `GET /api/clickcollect` - Gestión de pedidos de farmacia
 
 Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
@@ -248,6 +274,7 @@ Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens
 ## Referencias
 
 ### Documentación oficial
+
 - [Documentación oficial de .NET 9](https://learn.microsoft.com/en-us/dotnet/)
 - [ASP.NET Core Web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/)
 - [Entity Framework Core 9](https://learn.microsoft.com/en-us/ef/core/)
@@ -255,16 +282,17 @@ Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens
 - [AutoMapper](https://automapper.org/)
 - [Polly - Resiliencia](https://www.pollydocs.org/)
 
-
 ### Documentación del proyecto
+
 - [Guía de buenas prácticas (AGENTS.md)](AGENTS.md) - Normas de desarrollo del proyecto
 - [Documentación de seguridad (SECURITY.md)](SECURITY.md) - Políticas y configuración de seguridad
 - [Colección de peticiones HTTP](SecureAPIRestWithJwtTokens.http) - Ejemplos de uso de la API
 - [Colección Postman](SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
-- [Ejemplo de uso de ParallelSqlExecutor](Services/Examples/ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
-- [Ejemplo de uso de SqlDataService](Services/Examples/SqlDataService.md) - Uso práctico del servicio de datos SQL
+- [Ejemplo de uso de ParallelSqlExecutor](Services/_CodeExamples/ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
+- [Ejemplo de uso de SqlDataService](Services/_CodeExamples/SqlDataService.md) - Uso práctico del servicio de datos SQL
 
 ### Paquetes NuGet utilizados
+
 - **AutoMapper** 13.0.1
 - **Microsoft.AspNetCore.Authentication.JwtBearer** 9.0.9
 - **Microsoft.EntityFrameworkCore.SqlServer** 9.0.9
