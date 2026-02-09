@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SecureAPIRestWithJwtTokens.csproj" />
+    <ProjectReference Include="..\..\src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.csproj" />
   </ItemGroup>
 
 </Project>
