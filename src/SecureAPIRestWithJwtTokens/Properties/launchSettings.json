@@ -12,8 +12,8 @@
         "INTERNAL_API_IV": "AQIDBAUGBwgXFxkaGxwdHg==",
         "EXTERNAL_API_KEY": "BA8GEgY8ETgtLwEFAg5ONQ==",
         "EXTERNAL_API_IV": "NU4OAgUBLy04ETwGEgYPBA==",
-        "DB_PASSWORD": "n3nQcqTGOkhqKH1DlbGiHA==",
-        "DB_STRING_CONNECTION": "Server=10.150.5.21\\SQL2017;Database=TrebolDB;User Id=sa;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;"
+        "DB_PASSWORD": "9KO3Bh0vJDhD/O7H/goUPQ==",
+        "DB_STRING_CONNECTION": "Server=34.175.35.53,1433;Database=TrebolDB;User Id=sqlserver;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;"
       }
     }
   }

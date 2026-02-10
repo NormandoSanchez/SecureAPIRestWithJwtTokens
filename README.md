@@ -109,7 +109,7 @@ El proyecto incluye:
 
 ## e. Estructura del proyecto
 
-```
+```text
 SecureAPIRestWithJwtTokens/
 ├── Authorization/                     # Sistema de autorización personalizado
 │   ├── ProcesoAuthorizationPolicyProvider.cs
