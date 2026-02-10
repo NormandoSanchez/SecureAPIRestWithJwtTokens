@@ -1,8 +1,8 @@
 @SecureAPIRestWithJwtTokens_HostAddress = http://localhost:5044
 
 ### Variables de ejemplo para pruebas
-@username = admin
-@password = admin123
+@username = extra
+@password = Rlry7/GmY/0N6ZUDbYqqew==
 @userId = 1
 @paisId = 1
 @comunidadAutId = 1
@@ -24,14 +24,8 @@ Content-Type: application/json
 
 ###
 
-### Refresh Token - Refrescar token de acceso
+### Refresh Token - Refrescar token de acceso (Tras hacer Login)
 POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/refresh
-Content-Type: application/json
-
-###
-
-### Logout - Cerrar sesión
-POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/logout
 Content-Type: application/json
 
 ###
@@ -57,6 +51,12 @@ Accept: application/json
 ### Get Auth Process Codes - Obtener códigos de procesos autorizados
 GET {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/processes/Codes
 Accept: application/json
+
+###
+
+### Logout - Cerrar sesión
+POST {{SecureAPIRestWithJwtTokens_HostAddress}}/api/Auth/logout
+Content-Type: application/json
 
 ###
 
