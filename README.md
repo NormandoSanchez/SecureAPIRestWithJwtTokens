@@ -51,7 +51,7 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) o superior
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superior
-- Editor recomendado: Visual Studio 2022, Visual Studio Code o JetBrains Rider
+- Editor recomendado: Visual Studio Code, Visual Studio 2022 o JetBrains Rider
 
 ### Instalación
 
@@ -77,6 +77,8 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
    - Actualiza las conexiones a la base de datos
    - Configura las claves JWT y parámetros de seguridad
    - Ajusta los niveles de logging según el entorno
+
+   Para la comprobación del proyecto NO ES NECESARIO CAMBIAR NADA.
 
 ### Ejecución
 
@@ -107,7 +109,48 @@ El proyecto incluye:
 - `SecureAPIRestWithJwtTokens.http` - Ejemplos de todas las peticiones disponibles para probar los endpoints
 - `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados
 
-## e. Estructura del proyecto
+## e. Conexiones a base de datos
+
+La API utiliza tres tipos de conexiones:
+
+1. **Base de datos principal (ERP - EF Core)**
+   - Base de datos principal del proyecto. Es una base de datos existente desde 2014.  
+   - Se configura mediante variables de entorno para evitar cadenas en claro.
+   - Variables requeridas:
+     - `DB_STRING_CONNECTION`: cadena de conexion con el placeholder `${DB_PASSWORD}`.
+     - `DB_PASSWORD`: password cifrada que se desencripta en tiempo de ejecucion.
+   - El helper `ConnectionStringHelper` sustituye `${DB_PASSWORD}` por la password desencriptada.
+   - Para el proyecto se ha crreado una version reducida en Google Cloud.  
+
+   Ejemplo:
+
+   ```text
+   DB_STRING_CONNECTION=Server=SQL01;Database=TrebolDb;User Id=trebol_user;Password=${DB_PASSWORD};TrustServerCertificate=True;
+   DB_PASSWORD=Base64OrEncryptedValue
+   ```
+
+2. **Base CentralComun (SQL directo)**
+    - Base de datos diferente a la principal, de uso por la organizacion para otras operaciones.
+    - Se configura mediante variables de entorno para evitar cadenas en claro.
+    - Variables requeridas:
+       - `DBCOMUN_STRING_CONNECTION`: cadena de conexión con el placeholder `${DBCOMUN_PASSWORD}`.
+       - `DBCOMUN_PASSWORD`: password cifrada que se desencripta en tiempo de ejecución.
+    - El helper `ConnectionStringHelper` sustituye `${DBCOMUN_PASSWORD}` por la password desencriptada.
+    - Para el proyecto se ha crreado una version reducida en Google Cloud.
+
+    Ejemplo:
+
+    ```text
+    DBCOMUN_STRING_CONNECTION=Server=SQL01;Database=TrebolComunDb;User Id=trebol_user;Password=${DBCOMUN_PASSWORD};TrustServerCertificate=True;
+    DBCOMUN_PASSWORD=Base64OrEncryptedValue
+    ```
+
+3. **Conexiones a farmacias (multi-servidor)**
+   - Los datos de servidor, base de datos y usuario se leen desde el ERP.
+   - La password se almacena cifrada en el ERP y se desencripta al conectar.
+   - Se usan para ejecucion en paralelo con `ParallelSqlExecutor`.
+
+## f. Estructura del proyecto
 
 ```text
 SecureAPIRestWithJwtTokens/
@@ -189,11 +232,11 @@ SecureAPIRestWithJwtTokens/
 └── SecureAPIRestWithJwtTokens.http   # Colección de peticiones HTTP
 ```
 
-## f. Funcionalidades principales
+## g. Funcionalidades principales
 
 Las funciones principales solo incluyen una mínima parte de todas las funciones necesarias.
 Por confidencialidad y tiempo, solo se incluyen las básicas.
-El objetivo es deostrar que el proyecto es sólido.
+El objetivo es demostrar que el proyecto es sólido.
 
 ### Seguridad y Autenticación
 
@@ -225,7 +268,7 @@ El objetivo es deostrar que el proyecto es sólido.
 - **Repository Pattern:** Abstracción de acceso a datos con repositorios genéricos
 - **AutoMapper:** Mapeo automático entre entidades y DTOs
 
-## g. Arquitectura y patrones de diseño
+## h. Arquitectura y patrones de diseño
 
 ### Patrones implementados
 
@@ -243,7 +286,7 @@ El objetivo es deostrar que el proyecto es sólido.
 - **Middleware Pipeline:** Procesamiento de peticiones mediante middlewares personalizados
 - **Claims-based Authorization:** Autorización basada en claims y políticas
 
-## h. Endpoints principales
+## i. Endpoints principales
 
 ### Autenticación
 
@@ -269,7 +312,8 @@ El objetivo es deostrar que el proyecto es sólido.
 
 - `GET /api/clickcollect` - Gestión de pedidos de farmacia
 
-Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
+Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
+Importa a WorkSpace en Postman o consulta el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.
 
 ## Referencias
 
@@ -286,18 +330,24 @@ Consulta el archivo [SecureAPIRestWithJwtTokens.http](SecureAPIRestWithJwtTokens
 
 - [Guía de buenas prácticas (AGENTS.md)](AGENTS.md) - Normas de desarrollo del proyecto
 - [Documentación de seguridad (SECURITY.md)](SECURITY.md) - Políticas y configuración de seguridad
-- [Colección de peticiones HTTP](SecureAPIRestWithJwtTokens.http) - Ejemplos de uso de la API
-- [Colección Postman](SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
-- [Ejemplo de uso de ParallelSqlExecutor](Services/_CodeExamples/ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
-- [Ejemplo de uso de SqlDataService](Services/_CodeExamples/SqlDataService.md) - Uso práctico del servicio de datos SQL
+- [Colección de peticiones HTTP](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) - Ejemplos de uso de la API
+- [Colección Postman](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
+- [Ejemplo de uso de ParallelSqlExecutor](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
+- [Ejemplo de uso de SqlDataService](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\SqlDataService.md) - Uso práctico del servicio de datos SQL
 
 ### Paquetes NuGet utilizados
 
 - **AutoMapper** 13.0.1
 - **Microsoft.AspNetCore.Authentication.JwtBearer** 9.0.9
+- **Microsoft.AspNetCore.OpenApi** 9.0.9
+- **Microsoft.EntityFrameworkCore.Design** 9.0.9
 - **Microsoft.EntityFrameworkCore.SqlServer** 9.0.9
+- **Microsoft.EntityFrameworkCore.Tools** 9.0.9
 - **Polly** 8.6.4
 - **Serilog.AspNetCore** 9.0.0
+- **Serilog.Settings.Configuration** 9.0.0
+- **Serilog.Sinks.Console** 6.0.0
+- **Serilog.Sinks.File** 7.0.0
 - **Swashbuckle.AspNetCore** 9.0.6
 - **System.IdentityModel.Tokens.Jwt** 8.14.0
 

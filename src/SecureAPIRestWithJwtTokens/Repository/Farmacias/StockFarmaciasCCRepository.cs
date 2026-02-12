@@ -9,20 +9,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 using SecureAPIRestWithJwtTokens.Services.Interfaces;
+using AutoMapper.Features;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
 {
     public class StockFarmaciasCCRepository(TrebolDbContext context,
                                             ILogger<StockFarmaciasCCRepository> logger,
                                             ISqlDataServiceFactory sqlDataServiceFactory,
-                                            ApiConfiguration configuration,
+                                            ICryptoGraphicService cryptoGraphicService,
                                             IParallelSqlExecutor<DataTable> parallelSqlExecutor,
                                             IMapper mapper) : IGenericRepository<FarmaciaStock>
     {
         private readonly TrebolDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
         private readonly ILogger<StockFarmaciasCCRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));   
         private readonly ISqlDataServiceFactory _sqlFactory = sqlDataServiceFactory ?? throw new ArgumentNullException(nameof(sqlDataServiceFactory));
-        private readonly ApiConfiguration _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        private readonly ICryptoGraphicService _cryptoGraphicService = cryptoGraphicService ?? throw new ArgumentNullException(nameof(cryptoGraphicService));
         private readonly IParallelSqlExecutor<DataTable> _parallelSqlExecutor = parallelSqlExecutor ?? throw new ArgumentNullException(nameof(parallelSqlExecutor));
         private readonly IMapper _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
@@ -43,6 +44,12 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
             // Procesar parametro stock
             if(filtros != null) ProcesarFiltroStocks(filtros, lstArticulos, ref lstStocks);
             
+            // Si no se ha indicado ni código de farmacia ni artículos, devolvemos una lista vacía para evitar consultas innecesarias.
+            if (string.IsNullOrWhiteSpace(codFarmacia) && lstArticulos.Count == 0) 
+            {
+                return [];      
+            }
+
             // Obtener Farmacias con C&C 
             List<FarmaciaStock> farmaciasCC = await GetFarmaciasCC(codFarmacia);
 
@@ -165,25 +172,42 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
 
         /// <summary>
         /// Obtiene la lista de farmacias que tienen habilitado el servicio de Click &amp; Collect
+        /// Recupera la configuracion de conexion a la base de datos donde esta la definición de las farmacias C&amp;C y devuelve la lista de farmacias con esta información.
+        /// Si se indica un código de farmacia, se filtra por dicho código.
+        /// Esta BD no es la misma que la del ERP y no se gestiona por EF.
         /// </summary>
         /// <param name="codFarmacia">Código de la farmacia inicial</param>
         /// <returns></returns>
         private async Task<List<FarmaciaStock>> GetFarmaciasCC(string? codFarmacia)
         {
             await using var sqlService = _sqlFactory.CreateService();
-
-            var dbConnection = _configuration.GetCentralComunSQLConnection();
-
-            await sqlService.GetConnection(dbConnection);
-
-            var query = QueryConstants.GET_CENTRALCOMUN_FARMACIAS_CLICK_COLLECT;
-            if (!string.IsNullOrWhiteSpace(codFarmacia))
+            var helper = new ConnectionStringHelper(_cryptoGraphicService);
+                        
+            FarmaciaDBConnectionInternal? dbConnection = await helper.GetComunDBConnection();
+            if (dbConnection != null)
             {
-                query += $" AND IdFarmacia = '{codFarmacia}'";
-            }
-            var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text);
+                await sqlService.GetConnection(dbConnection);
 
-            return result.MapToList<FarmaciaStock>() ?? [];
+                // Construir query y parámetros (Evitar SQL injection)
+                var query = QueryConstants.GET_CENTRALCOMUN_FARMACIAS_CLICK_COLLECT;
+                Dictionary<string, object>? parameters = null;
+                if (!string.IsNullOrWhiteSpace(codFarmacia))
+                {
+                    query += " AND IdFarmacia = @IdFarmacia";
+                    parameters = new Dictionary<string, object>
+                    {
+                        ["IdFarmacia"] = codFarmacia.Trim()
+                    };
+                }
+                var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text, false, parameters);
+
+                return result.MapToList<FarmaciaStock>() ?? [];
+            }
+            else
+            {
+                _logger.LogError("No se ha podido obtener la cadena de conexión para las farmacias C&C.");
+                return [];
+            }
         }
 
         /// <summary>

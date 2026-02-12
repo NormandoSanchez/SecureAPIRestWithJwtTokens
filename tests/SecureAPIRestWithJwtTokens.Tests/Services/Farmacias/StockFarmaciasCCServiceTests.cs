@@ -88,7 +88,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -126,7 +126,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -176,7 +176,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -241,7 +241,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -322,7 +322,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -336,7 +336,7 @@ public class StockFarmaciasCCServiceTests
     /// Verifica que GetItemsAsync maneje farmacias con articulos múltiples
     /// </summary>
     [Fact]
-    public async Task GetItemsAsync_WithMultipleArticles_FiltersCorrectly()
+    public async Task GetAllAsync_WithMultipleArticles_FiltersCorrectly()
     {
         // Arrange
         var filtros = new Dictionary<string, object>
@@ -376,7 +376,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();
@@ -385,10 +385,10 @@ public class StockFarmaciasCCServiceTests
     }
 
     /// <summary>
-    /// Verifica que GetItemsAsync maneje correctamente el mapper
+    /// Verifica que GetAllAsync maneje correctamente el mapper
     /// </summary>
     [Fact]
-    public async Task GetItemsAsync_MapsEntitiesCorrectly()
+    public async Task GetAllAsync_MapsEntitiesCorrectly()
     {
         // Arrange
         var filtros = new Dictionary<string, object>
@@ -431,7 +431,7 @@ public class StockFarmaciasCCServiceTests
         var service = CreateService();
 
         // Act
-        var result = await service.GetItemsAsync(filtros);
+        var result = await service.GetAllAsync(filtros);
 
         // Assert
         result.Should().NotBeNull();

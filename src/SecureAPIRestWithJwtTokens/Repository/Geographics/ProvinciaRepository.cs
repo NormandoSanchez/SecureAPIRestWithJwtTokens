@@ -13,12 +13,12 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
 {
     public class ProvinciaRepository(TrebolDbContext context,
                                      ISqlDataServiceFactory sqlDataServiceFactory,
-                                     ApiConfiguration apiConfiguration,
+                                     ICryptoGraphicService cryptoGraphicService,
                                      ILogger<ProvinciaRepository> logger) : IGenericRepository<Provincia>
     {
         private readonly TrebolDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
         private readonly ISqlDataServiceFactory _sqlFactory = sqlDataServiceFactory ?? throw new ArgumentNullException(nameof(sqlDataServiceFactory));
-        private readonly ApiConfiguration _apiConfiguration = apiConfiguration ?? throw new ArgumentNullException(nameof(apiConfiguration));
+        private readonly ICryptoGraphicService _cryptoGraphicService = cryptoGraphicService ?? throw new ArgumentNullException(nameof(cryptoGraphicService));
         private readonly ILogger<ProvinciaRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));  
 
         /// <summary>
@@ -75,26 +75,25 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
         private async Task<List<Provincia>> GetProvinciasConFarmaciasCCAsync()
         {
             await using var sqlService = _sqlFactory.CreateService();
-
-            var dbConnection = _apiConfiguration.GetCentralComunSQLConnection();
-                
-            await sqlService.GetConnection(dbConnection);
-
-            var query = "SELECT LTRIM(RTRIM(IdFarmacia)) AS IdFarmacia FROM dbo.totalfarmacias WHERE CCollect = 'S'";
-            var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text);
-
-            var farmaciasCC = result.MapToList<FarmaciaCCDto>() ?? [];
-
-            // Si no hay farmacias con C&C, devolvemos una lista vacía inmediatamente.
-            if (farmaciasCC.Count == 0)
+            var helper = new ConnectionStringHelper(_cryptoGraphicService);
+            FarmaciaDBConnectionInternal? dbConnection = await helper.GetComunDBConnection();
+            if (dbConnection != null)
             {
-                return [];
-            }
+                 await sqlService.GetConnection(dbConnection);
+                 // Construir query
+                var query = QueryConstants.GET_CENTRALCOMUN_FARMACIAS_CLICK_COLLECT;
+                var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text);
+                var farmaciasCC = result.MapToList<FarmaciaCCDto>() ?? [];
+                 // Si no hay farmacias con C&C, devolvemos una lista vacía inmediatamente.
+                if (farmaciasCC.Count == 0)
+                {
+                    return [];
+                }
+                
+                // Extraemos  los IDs a un HashSet para una búsqueda ultra rápida (O(1)).
+                var farmaciasCCIds = farmaciasCC.Select(f => f.IdFarmacia).ToHashSet();
 
-            // Extraemos  los IDs a un HashSet para una búsqueda ultra rápida (O(1)).
-            var farmaciasCCIds = farmaciasCC.Select(f => f.IdFarmacia).ToHashSet();
-
-            var unidadesNegocioData = await _context.UnidadNegocioDirecciones
+                var unidadesNegocioData = await _context.UnidadNegocioDirecciones
                                                     .Include(ud => ud.Dir)
                                                     .ThenInclude(d => d.Provincia)
                                                     .Include(ud => ud.UnidadNegocio)
@@ -104,16 +103,21 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
                                                           !ud.UnidadNegocio.UnnEsCentral)
                                                      .ToListAsync();
                 
-            var listaRet = unidadesNegocioData.Where(ud => farmaciasCCIds.Contains(ud.UnidadNegocio.UnnTrebol.Substring(1, 4)))
+                var listaRet = unidadesNegocioData.Where(ud => farmaciasCCIds.Contains(ud.UnidadNegocio.UnnTrebol.Substring(1, 4)))
                                               .Select(ud => ud.Dir.Provincia)
                                               .Distinct()
                                               .OrderBy(p => p.PrvNombre)
                                               .ToList();
 
-            _logger.LogInformation("Se han recuperado {Count} provincias con farmacias Click&Collect.",
+                _logger.LogInformation("Se han recuperado {Count} provincias con farmacias Click&Collect.",
                                     listaRet.Count);
-
-            return listaRet;
+                return listaRet;
+            }
+            else
+            {
+                _logger.LogError("No se pudo obtener la conexión a la base de datos común para recuperar las farmacias Click&Collect.");
+                return [];
+            }            
         }
 
         /// <summary>

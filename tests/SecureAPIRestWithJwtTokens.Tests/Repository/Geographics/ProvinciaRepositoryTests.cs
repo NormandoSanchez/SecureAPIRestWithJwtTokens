@@ -18,12 +18,12 @@ public class ProvinciaRepositoryTests
     private static ProvinciaRepository CreateRepository(
         TrebolDbContext context,
         ISqlDataServiceFactory? sqlFactory = null,
-        ApiConfiguration? apiConfiguration = null)
+        ICryptoGraphicService? cryptoService = null)
     {
         var loggerMock = new Mock<ILogger<ProvinciaRepository>>();
         var sqlFactoryMock = sqlFactory ?? new Mock<ISqlDataServiceFactory>().Object;
-        var apiConfigMock = apiConfiguration ?? new Mock<ApiConfiguration>().Object;
-        return new ProvinciaRepository(context, sqlFactoryMock, apiConfigMock, loggerMock.Object);
+        var cryptoServiceMock = cryptoService ?? new Mock<ICryptoGraphicService>().Object;
+        return new ProvinciaRepository(context, sqlFactoryMock, cryptoServiceMock, loggerMock.Object);
     }
 
     [Fact]
@@ -31,8 +31,8 @@ public class ProvinciaRepositoryTests
     {
         var logger = new Mock<ILogger<ProvinciaRepository>>().Object;
         var sqlFactory = new Mock<ISqlDataServiceFactory>().Object;
-        var apiConfig = new Mock<ApiConfiguration>().Object;
-        var act = () => new ProvinciaRepository(null!, sqlFactory, apiConfig, logger);
+        var cryptoService = new Mock<ICryptoGraphicService>().Object;
+        var act = () => new ProvinciaRepository(null!, sqlFactory, cryptoService, logger);
         act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("context");
     }
 
@@ -41,19 +41,19 @@ public class ProvinciaRepositoryTests
     {
         using var context = TestDbContextFactory.CreateContext();
         var logger = new Mock<ILogger<ProvinciaRepository>>().Object;
-        var apiConfig = new Mock<ApiConfiguration>().Object;
-        var act = () => new ProvinciaRepository(context, null!, apiConfig, logger);
+        var cryptoService = new Mock<ICryptoGraphicService>().Object;
+        var act = () => new ProvinciaRepository(context, null!, cryptoService, logger);
         act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("sqlDataServiceFactory");
     }
 
     [Fact]
-    public void Constructor_WithNullApiConfiguration_ThrowsArgumentNullException()
+    public void Constructor_WithNullCryptoService_ThrowsArgumentNullException()
     {
         using var context = TestDbContextFactory.CreateContext();
         var logger = new Mock<ILogger<ProvinciaRepository>>().Object;
         var sqlFactory = new Mock<ISqlDataServiceFactory>().Object;
         var act = () => new ProvinciaRepository(context, sqlFactory, null!, logger);
-        act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("apiConfiguration");
+        act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("cryptoGraphicService");
     }
 
     [Fact]
@@ -61,8 +61,8 @@ public class ProvinciaRepositoryTests
     {
         using var context = TestDbContextFactory.CreateContext();
         var sqlFactory = new Mock<ISqlDataServiceFactory>().Object;
-        var apiConfig = new Mock<ApiConfiguration>().Object;
-        var act = () => new ProvinciaRepository(context, sqlFactory, apiConfig, null!);
+        var cryptoService = new Mock<ICryptoGraphicService>().Object;
+        var act = () => new ProvinciaRepository(context, sqlFactory, cryptoService, null!);
         act.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("logger");
     }
 

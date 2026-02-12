@@ -9,24 +9,10 @@ public class ApiConfiguration
     public JwtSettings JwtSettings { get; set; } = new();
     public DatosDocumentacion DatosDocumentacion { get; set; } = new();
     public PropiedadesApi PropiedadesApi { get; set; } = new();
-    public CentralComunSql CentralComunSql { get; set; } = new();
     public Resilience Resilience { get; set; } = new();
     public CacheSettings CacheSettings { get; set; } = new();
     public CorsSettings Cors { get; set; } = new();
     public NotificacionesSettings Notificaciones { get; set; } = new();
-
-    public FarmaciaDBConnectionInternal GetCentralComunSQLConnection()
-    {
-        var dbConnection = new FarmaciaDBConnectionInternal
-        {
-            Server = CentralComunSql.Servidor,
-            DataBase = CentralComunSql.BD,
-            User = CentralComunSql.User,
-            EncriptedPassword = CentralComunSql.Pwd
-        };
-
-        return dbConnection;
-    }
 }
 
 /// <summary>
@@ -105,17 +91,6 @@ public class DatosDocumentacion
 public class PropiedadesApi
 {
     public string DBAppName { get; set; } = string.Empty;
-}
-
-/// <summary>
-/// Credenciales para la base de datos central común.
-/// </summary>
-public class CentralComunSql
-{
-    public string Servidor { get; set; } = string.Empty;
-    public string BD { get; set; } = string.Empty;
-    public string User { get; set; } = string.Empty;
-    public string Pwd { get; set; } = string.Empty;
 }
 
 /// <summary>

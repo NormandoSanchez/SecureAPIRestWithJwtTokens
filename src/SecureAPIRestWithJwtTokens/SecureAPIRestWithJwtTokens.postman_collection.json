@@ -733,6 +733,251 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Geographic",
+			"item": [
+				{
+					"name": "Paises - Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Paises",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Paises"
+							]
+						},
+						"description": "Obtiene la lista de todos los paises. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Paises - Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Paises/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Paises",
+								"1"
+							]
+						},
+						"description": "Obtiene un pais por su identificador. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "ComunidadesAut - Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ComunidadesAut?Pais=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ComunidadesAut"
+							],
+							"query": [
+								{
+									"key": "Pais",
+									"value": "1",
+									"description": "Filtro opcional por pais"
+								}
+							]
+						},
+						"description": "Obtiene la lista de comunidades autonomas (opcionalmente filtradas por Pais). Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "ComunidadesAut - Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ComunidadesAut/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ComunidadesAut",
+								"1"
+							]
+						},
+						"description": "Obtiene una comunidad autonoma por ID. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Provincias - Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Provincias?Pais=1&ComunidadAut=2&ClickCollect=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Provincias"
+							],
+							"query": [
+								{
+									"key": "Pais",
+									"value": "1",
+									"description": "Filtro opcional por pais"
+								},
+								{
+									"key": "ComunidadAut",
+									"value": "2",
+									"description": "Filtro opcional por comunidad autonoma"
+								},
+								{
+									"key": "ClickCollect",
+									"value": "true",
+									"description": "Filtro opcional por disponibilidad Click&Collect"
+								}
+							]
+						},
+						"description": "Obtiene la lista de provincias con filtros opcionales. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Provincias - Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Provincias/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Provincias",
+								"1"
+							]
+						},
+						"description": "Obtiene una provincia por ID. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Poblaciones - Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Poblaciones?Pais=1&Provincia=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Poblaciones"
+							],
+							"query": [
+								{
+									"key": "Pais",
+									"value": "1",
+									"description": "Filtro opcional por pais"
+								},
+								{
+									"key": "Provincia",
+									"value": "2",
+									"description": "Filtro opcional por provincia"
+								}
+							]
+						},
+						"description": "Obtiene la lista de poblaciones con filtros opcionales. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Poblaciones - Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Poblaciones/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Poblaciones",
+								"1"
+							]
+						},
+						"description": "Obtiene una poblacion por ID. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [

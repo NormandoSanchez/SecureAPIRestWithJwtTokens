@@ -1,34 +1,5 @@
-using SecureAPIRestWithJwtTokens.Constants;
-using SecureAPIRestWithJwtTokens.Services.Interfaces;
-
 namespace SecureAPIRestWithJwtTokens.Tools
 {
-    /// <summary>
-    /// Helper para obtener y desencriptar la cadena de conexión desde appsettings.json
-    /// </summary>
-    public class ConnectionStringHelper(ICryptoGraphicService cryptoService)
-    {
-        private readonly ICryptoGraphicService _cryptoService = cryptoService;
-
-        /// <summary>
-        /// Recupera y desencripta la cadena de conexión para el contexto especificado
-        /// </summary>
-        /// <returns>Cadena de conexión desencriptada</returns>
-        public async Task<string?> GetDecriptedConnectionStringOfContext()
-        {
-            string dbPassword = Environment.GetEnvironmentVariable(EnvironmentConstants.DB_PASSWORD) ?? string.Empty;
-            string dbConnectionString = Environment.GetEnvironmentVariable(EnvironmentConstants.DB_STRING_CONNECTION) ?? string.Empty;
-            if (!string.IsNullOrEmpty(dbPassword) && !string.IsNullOrEmpty(dbConnectionString))
-            {
-                var decryptedPassword = await _cryptoService.DecriptAsync(dbPassword);
-                dbConnectionString = dbConnectionString.Replace("${DB_PASSWORD}", decryptedPassword);
-                return dbConnectionString;
-            }
-            
-            return null;
-        }
-    }
-
     /// <summary>
     /// Funciones comunes de utilidad
     /// </summary>
