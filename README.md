@@ -50,7 +50,7 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
 ### Prerrequisitos
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) o superior
-- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superior
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superi
 - Editor recomendado: Visual Studio Code, Visual Studio 2022 o JetBrains Rider
 
 ### Instalación
@@ -121,13 +121,7 @@ La API utiliza tres tipos de conexiones:
      - `DB_PASSWORD`: password cifrada que se desencripta en tiempo de ejecucion.
    - El helper `ConnectionStringHelper` sustituye `${DB_PASSWORD}` por la password desencriptada.
    - Para el proyecto se ha crreado una version reducida en Google Cloud.  
-
-   Ejemplo:
-
-   ```text
-   DB_STRING_CONNECTION=Server=SQL01;Database=TrebolDb;User Id=trebol_user;Password=${DB_PASSWORD};TrustServerCertificate=True;
-   DB_PASSWORD=Base64OrEncryptedValue
-   ```
+      Se ha habilitado un servidor SQL en Google Cloud: 34.175.35.53,1433
 
 2. **Base CentralComun (SQL directo)**
     - Base de datos diferente a la principal, de uso por la organizacion para otras operaciones.
@@ -136,19 +130,12 @@ La API utiliza tres tipos de conexiones:
        - `DBCOMUN_STRING_CONNECTION`: cadena de conexión con el placeholder `${DBCOMUN_PASSWORD}`.
        - `DBCOMUN_PASSWORD`: password cifrada que se desencripta en tiempo de ejecución.
     - El helper `ConnectionStringHelper` sustituye `${DBCOMUN_PASSWORD}` por la password desencriptada.
-    - Para el proyecto se ha crreado una version reducida en Google Cloud.
-
-    Ejemplo:
-
-    ```text
-    DBCOMUN_STRING_CONNECTION=Server=SQL01;Database=TrebolComunDb;User Id=trebol_user;Password=${DBCOMUN_PASSWORD};TrustServerCertificate=True;
-    DBCOMUN_PASSWORD=Base64OrEncryptedValue
-    ```
+    - Para el TFM se ha alojado en el mismo servidor Google SQL Cloud que la conexion anterior.
 
 3. **Conexiones a farmacias (multi-servidor)**
    - Los datos de servidor, base de datos y usuario se leen desde el ERP.
    - La password se almacena cifrada en el ERP y se desencripta al conectar.
-   - Se usan para ejecucion en paralelo con `ParallelSqlExecutor`.
+   - Se usan en la ejecución en paralelo con `ParallelSqlExecutor`.
 
 ## f. Estructura del proyecto
 
@@ -238,7 +225,7 @@ Las funciones principales solo incluyen una mínima parte de todas las funciones
 Por confidencialidad y tiempo, solo se incluyen las básicas.
 El objetivo es demostrar que el proyecto es sólido.
 
-### Seguridad y Autenticación
+### EndPoints Seguridad y Autenticación
 
 - **Autenticación JWT:** Tokens seguros con cookies HttpOnly para prevenir ataques XSS
 - **Autorización personalizada:** Sistema basado en políticas, claims y atributos personalizados
@@ -248,14 +235,17 @@ El objetivo es demostrar que el proyecto es sólido.
 ### Gestión Geográfica
 
 - **Países, Comunidades Autónomas, Provincias y Poblaciones:** CRUD básico con filtros avanzados
+Requieren autorización básica, es decir la peticion debe ir con las httponly cookies recibidas tras la autentificación.
 
 ### Farmacias
 
 - **Stock Click & Collect:** Obtención de stock en centros para servicio Click & Collect
+Ejemplo de uso de parallelexecutor, no requiere autenficación. (Ver controlador para explicación)
 
 ### Avisos y Notificaciones
 
 - **Avisos internos:** Sistema de comunicación entre usuarios y módulos del sistema
+Requiere autentificacion y politica de permisos especifica.
 
 ### Características técnicas
 
@@ -292,6 +282,7 @@ El objetivo es demostrar que el proyecto es sólido.
 
 - `POST /api/auth/login` - Autenticación de usuarios
 - `POST /api/auth/refresh` - Renovación de tokens
+- `GET /api/Auth/session/verify` - Comprobación de sesión autenticada
 - `POST /api/auth/logout` - Cierre de sesión
 
 ### Geografía
@@ -310,7 +301,7 @@ El objetivo es demostrar que el proyecto es sólido.
 
 ### Click & Collect
 
-- `GET /api/clickcollect` - Gestión de pedidos de farmacia
+- `GET /api/clickcollect` - Recuperar centros con stock para servir peticion Click & Collet
 
 Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
 Importa a WorkSpace en Postman o consulta el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.

@@ -1,5 +1,7 @@
 # Seguridad
 
+Para la evaluacion del TFM este archivo se ha subido a GitHub excepcionalmente.
+
 ## Claves criptograficas
 
 ### INTERNAS

@@ -92,9 +92,7 @@ public class PaisesController(IGenericService<PaisDto> paisService,
 
         if (!_memoryCache.TryGetValue(baseKey, out PaisDto? pais))
         {
-            pais = await _paisService.GetByIdAsync(id);
-            if (pais == null) throw new SimpleNotFoundException(EntitiesConstants.PAISES, id);
-
+            pais = await _paisService.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.PAISES, id);
             var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
             _memoryCache.Set(baseKey, pais, cacheOptions);
         }

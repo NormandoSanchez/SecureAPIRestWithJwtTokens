@@ -12,6 +12,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers;
 /// <summary>
 /// Controlador para recuperar stock de farmacias Click &amp; Collect 
 /// Este EndPoint es público y no requiere autenticación. El sistema que lo consume asi lo requiere.  
+/// En Producción se encuentra protegido por una capa de seguridad perimetral que restringe el acceso a IPs autorizadas.
 /// </summary>
 [Route("api/[controller]")]
 [AllowAnonymous]

@@ -48,16 +48,20 @@ All DI registration happens in `Extensions/WebApplicationExtensions.cs`:
 
 1. `POST /api/auth/login` validates credentials via `AuthService`
 2. `JwtService` generates access/refresh tokens
-3. Tokens stored in HttpOnly cookies (`access_token`, `refresh_token`)
+3. Tokens stored in HttpOnly cookies (`AKT_01`, `AKT_02`) Token acceso y refresco, respectivamente.
 4. `JwtBearerEvents.OnMessageReceived` extracts token from cookie (not headers)
 
 ### Custom Authorization
 
 Use `[ProcesoAuthorize("PROCESS_CODE")]` attribute for process-based authorization:
+Use `[Authorize]` attribute for autentication-based authorization:
 
 ```csharp
 
 [ProcesoAuthorize("ADM001", "ADM002")]  // Requires any of these process codes
+public async Task<IActionResult> SomeEndpoint() { ... }
+
+[Authorize]  // Requires autentification only 
 public async Task<IActionResult> SomeEndpoint() { ... }
 ```
 

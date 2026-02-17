@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using SecureAPIRestWithJwtTokens.Repository.Interfaces;
 using SecureAPIRestWithJwtTokens.Services.Interfaces;
-using AutoMapper.Features;
 
 namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
 {
