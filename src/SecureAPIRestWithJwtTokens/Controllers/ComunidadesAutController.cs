@@ -96,17 +96,14 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         private async Task<List<ComunidadAutDto>> GetComunidadesFromCacheAsync(int? pais)
         {
             var filtros = new Dictionary<string, object>();
-            string baseKey;
+            string baseKey = string.Join("_", CacheConstants.CACHE_KEY_COMAUT, CacheConstants.CACHE_KEY_ALL);
 
             if (pais != null)
             {
                 filtros.Add(FilterConstants.PAIS, pais.Value);
-                baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, CacheConstants.CACHE_KEY_ALL, EntitiesConstants.PAIS, pais.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
             }
-            else
-            {
-                baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, CacheConstants.CACHE_KEY_ALL);
-            }
+           
 
             var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
 

@@ -99,14 +99,14 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
             if (provincia != null) filtros.Add(FilterConstants.PROVINCIA, provincia.Value);
 
-            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, CacheConstants.CACHE_KEY_ALL);
+            var baseKey = string.Join("_", CacheConstants.CACHE_KEY_POBLACION, CacheConstants.CACHE_KEY_ALL);
             if (pais != null)
             {
-                baseKey += string.Join("_", EntitiesConstants.PAIS, pais.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
             }
             if (provincia != null)
             {
-                baseKey += string.Join("_", EntitiesConstants.PROVINCIA, provincia.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, provincia.Value);
             }
 
             var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
@@ -124,7 +124,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
 
         private async Task<PoblacionDto> GetPoblacionByIdFromCacheAsync(int id)
         {
-            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, id);
+            var baseKey = string.Join("_", CacheConstants.CACHE_KEY_POBLACION, id);
 
             if (!_cache.TryGetValue(baseKey, out PoblacionDto? poblacion))
             {

@@ -105,18 +105,18 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             if (comunidadAut != null) filtros.Add(FilterConstants.COMUNIDADAUT, comunidadAut.Value);
             if (clickCollect != null) filtros.Add(FilterConstants.CLICK_COLLECT, clickCollect.Value);
 
-            string baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, CacheConstants.CACHE_KEY_ALL);
+            string baseKey = string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, CacheConstants.CACHE_KEY_ALL);
             if (pais != null)
             {
-                baseKey += string.Join("_", EntitiesConstants.PAIS, pais.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
             }
             else if (comunidadAut != null)
             {
-                baseKey = string.Join("_", EntitiesConstants.COMUNIDADAUT, comunidadAut.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_COMAUT, comunidadAut.Value);
             }
             else if (clickCollect != null)
             {
-                baseKey = string.Join("_", FilterConstants.CLICK_COLLECT, clickCollect.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_CLICK_COLLECT, clickCollect.Value);
             }
 
             var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
@@ -134,7 +134,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
 
         private async Task<ProvinciaDto> GetProvinciaByIdFromCacheAsync(int id)
         {
-            var baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, id);
+            var baseKey = string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, id);
 
             if (!_memoryCache.TryGetValue(baseKey, out ProvinciaDto? provincia))
             {

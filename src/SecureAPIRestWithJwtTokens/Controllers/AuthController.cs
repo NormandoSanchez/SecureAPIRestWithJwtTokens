@@ -330,7 +330,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 async (userId, perfilId, userName) =>
                 {
                     // Intentar obtener de caché MemoryCache
-                    string cacheKey = $"{CacheConstants.CACHE_KEY_MODULES}{userId}_{perfilId}";
+                    string cacheKey = string.Join("_", CacheConstants.CACHE_KEY_MODULES, userId, perfilId);
                     if (_memoryCache.TryGetValue(cacheKey, out List<AuthProcessDto>? cachedModules) && cachedModules != null)
                     {
                         return cachedModules;
@@ -367,7 +367,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 async (userId, perfilId, userName) =>
                 {
                     // Intentar obtener de caché MemoryCache
-                    string cacheKey =  $"{CacheConstants.CACHE_KEY_MENU}{userId}_{perfilId}_{idModulo}";
+                    string cacheKey = string.Join("_", CacheConstants.CACHE_KEY_MENU, userId, perfilId, idModulo);
                     if (_memoryCache.TryGetValue(cacheKey, out List<AuthProcessDto>? cachedMenuOptions) && cachedMenuOptions != null)
                     {
                         return cachedMenuOptions;
@@ -405,7 +405,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 async (userId, perfilId, userName) =>
                 {
                     // Intentar obtener de caché MemoryCache
-                    string cacheKey =  $"{CacheConstants.CACHE_KEY_PROCESS}{userId}_{perfilId}";
+                    string cacheKey = string.Join("_", CacheConstants.CACHE_KEY_PROCESS, userId, perfilId);
                     if (_memoryCache.TryGetValue(cacheKey, out List<string>? cachedProcessCodes) && cachedProcessCodes != null)
                     {
                         return cachedProcessCodes;

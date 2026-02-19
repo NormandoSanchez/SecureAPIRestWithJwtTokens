@@ -90,7 +90,7 @@ public class PaisesController(IGenericService<PaisDto> paisService,
 #region Métodos privados
     private async Task<List<PaisDto>> GetAllPaisesFromCacheAsync()
     {
-        var baseKey = string.Join("_", EntitiesConstants.PAISES, CacheConstants.CACHE_KEY_ALL);
+        var baseKey = string.Join("_", CacheConstants.CACHE_KEY_PAIS, CacheConstants.CACHE_KEY_ALL);
 
         if (!_memoryCache.TryGetValue(baseKey, out List<PaisDto>? paises))
         {
@@ -105,7 +105,7 @@ public class PaisesController(IGenericService<PaisDto> paisService,
 
     private async Task<PaisDto> GetPaisByIdFromCacheAsync(int id)
     {
-        var baseKey = string.Join("_", EntitiesConstants.PAISES, id);
+        var baseKey = string.Join("_", CacheConstants.CACHE_KEY_PAIS, id);
 
         if (!_memoryCache.TryGetValue(baseKey, out PaisDto? pais))
         {
