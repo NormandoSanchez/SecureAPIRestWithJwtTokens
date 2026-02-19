@@ -52,24 +52,9 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             ResponseCacheHelper.SetResponseCacheHeadersWithVary(
                  Response,
                  _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
-                 varyByQueryKeys: "Pais, Provincia");
+                 varyByQueryKeys: "pais, provincia");
 
-            var filtros = new Dictionary<string, object>();
-
-            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value); 
-            if (provincia != null) filtros.Add(FilterConstants.PROVINCIA, provincia.Value);
-            
-            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, CacheConstants.CACHE_KEY_ALL);
-            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
-
-            if (!_cache.TryGetValue(cacheKey, out List<PoblacionDto>? poblaciones))
-            {
-                poblaciones = await _poblacionServ.GetAllAsync(filtros) ?? throw new SimpleNotFoundException(EntitiesConstants.POBLACIONES);
-
-                // Configuracion Memory Cache
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _cache.Set(cacheKey, poblaciones, cacheOptions);
-            }   
+            var poblaciones = await GetPoblacionesFromCacheAsync(pais, provincia);
 
             var response = ApiResponseBuilder.Success(poblaciones, $"{EntitiesConstants.POBLACIONES} {GenericConstants.RESPONSE_EXITO_PLURAL_FEMENINO}");
 
@@ -99,19 +84,58 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
                 varyByQueryKeys: "id");
 
-            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, id);
-
-            if (!_cache.TryGetValue(baseKey, out PoblacionDto? poblacion))
-            {
-                poblacion = await _poblacionServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.POBLACIONES, id);
-                // Configuracion Memory Cache
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _cache.Set(baseKey, poblacion, cacheOptions);
-            }
+            var poblacion = await GetPoblacionByIdFromCacheAsync(id);
 
             var response = ApiResponseBuilder.Success(poblacion, $"{EntitiesConstants.POBLACION} {GenericConstants.RESPONSE_EXITO_SINGULAR_FEMENINO}");
 
             return Ok(response);
         }
+
+        #region Métodos privados
+        private async Task<List<PoblacionDto>> GetPoblacionesFromCacheAsync(int? pais, int? provincia)
+        {
+            var filtros = new Dictionary<string, object>();
+
+            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
+            if (provincia != null) filtros.Add(FilterConstants.PROVINCIA, provincia.Value);
+
+            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, CacheConstants.CACHE_KEY_ALL);
+            if (pais != null)
+            {
+                baseKey += string.Join("_", EntitiesConstants.PAIS, pais.Value);
+            }
+            if (provincia != null)
+            {
+                baseKey += string.Join("_", EntitiesConstants.PROVINCIA, provincia.Value);
+            }
+
+            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
+
+            if (!_cache.TryGetValue(cacheKey, out List<PoblacionDto>? poblaciones))
+            {
+                poblaciones = await _poblacionServ.GetAllAsync(filtros) ?? throw new SimpleNotFoundException(EntitiesConstants.POBLACIONES);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _cache.Set(cacheKey, poblaciones, cacheOptions);
+            }
+
+            return poblaciones!;
+        }
+
+        private async Task<PoblacionDto> GetPoblacionByIdFromCacheAsync(int id)
+        {
+            var baseKey = string.Join("_", EntitiesConstants.POBLACIONES, id);
+
+            if (!_cache.TryGetValue(baseKey, out PoblacionDto? poblacion))
+            {
+                poblacion = await _poblacionServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.POBLACIONES, id);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _cache.Set(baseKey, poblacion, cacheOptions);
+            }
+
+            return poblacion!;
+        }
+        #endregion
     }
 }

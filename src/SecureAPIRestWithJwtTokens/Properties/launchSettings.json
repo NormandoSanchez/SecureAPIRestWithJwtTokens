@@ -12,10 +12,10 @@
         "INTERNAL_API_IV": "AQIDBAUGBwgXFxkaGxwdHg==",
         "EXTERNAL_API_KEY": "BA8GEgY8ETgtLwEFAg5ONQ==",
         "EXTERNAL_API_IV": "NU4OAgUBLy04ETwGEgYPBA==",
-        "DB_PASSWORD": "9KO3Bh0vJDhD/O7H/goUPQ==",
-        "DB_STRING_CONNECTION": "Server=34.175.35.53,1433;Database=TrebolDB;User Id=sqlserver;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;",
-        "DBCOMUN_PASSWORD": "9KO3Bh0vJDhD/O7H/goUPQ==",
-        "DBCOMUN_STRING_CONNECTION": "Server=34.175.35.53,1433;Database=TrebolDB;User Id=sqlserver;Password=${DBCOMUN_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;",
+        "DB_PASSWORD": "xCpe8UXblJz8omhGETamGhW+/PToKwr/R2n0kehLFR0=",
+        "DB_STRING_CONNECTION": "Server=nsm-tfm-master.database.windows.net;Database=TrebolDB;User Id=nsmsa;Password=${DB_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;",
+        "DBCOMUN_PASSWORD": "xCpe8UXblJz8omhGETamGhW+/PToKwr/R2n0kehLFR0=",
+        "DBCOMUN_STRING_CONNECTION": "Server=nsm-tfm-master.database.windows.net;Database=TrebolDB;User Id=nsmsa;Password=${DBCOMUN_PASSWORD};TrustServerCertificate=True;MultipleActiveResultSets=True;Application Name=SecureAPIRestWithJwtTokens;",
       }
     }
   }

@@ -47,16 +47,7 @@ public class PaisesController(IGenericService<PaisDto> paisService,
                 Response,
                 _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds);
 
-        var baseKey = string.Join("_", EntitiesConstants.PAISES, CacheConstants.CACHE_KEY_ALL);
-
-        if (!_memoryCache.TryGetValue(baseKey, out List<PaisDto>? paises))
-        {
-            paises = await _paisService.GetAllAsync();
-
-            // Configuracion Memory Cache
-            var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-            _memoryCache.Set(baseKey, paises, cacheOptions);
-        }
+        var paises = await GetAllPaisesFromCacheAsync();
 
         var response = ApiResponseBuilder.Success(paises, 
                                                     $"{EntitiesConstants.PAISES} {GenericConstants.RESPONSE_EXITO_PLURAL_MASCULINO}");
@@ -88,17 +79,43 @@ public class PaisesController(IGenericService<PaisDto> paisService,
             Response,
             _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds);
 
+        var pais = await GetPaisByIdFromCacheAsync(id);
+
+        var response = ApiResponseBuilder.Success(pais, 
+                                                  $"{EntitiesConstants.PAIS} {GenericConstants.RESPONSE_EXITO_SINGULAR_MASCULINO}");
+
+        return Ok(response);
+    }
+
+#region Métodos privados
+    private async Task<List<PaisDto>> GetAllPaisesFromCacheAsync()
+    {
+        var baseKey = string.Join("_", EntitiesConstants.PAISES, CacheConstants.CACHE_KEY_ALL);
+
+        if (!_memoryCache.TryGetValue(baseKey, out List<PaisDto>? paises))
+        {
+            paises = await _paisService.GetAllAsync();
+
+            var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+            _memoryCache.Set(baseKey, paises, cacheOptions);
+        }
+
+        return paises!;
+    }
+
+    private async Task<PaisDto> GetPaisByIdFromCacheAsync(int id)
+    {
         var baseKey = string.Join("_", EntitiesConstants.PAISES, id);
 
         if (!_memoryCache.TryGetValue(baseKey, out PaisDto? pais))
         {
             pais = await _paisService.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.PAISES, id);
+
             var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
             _memoryCache.Set(baseKey, pais, cacheOptions);
         }
-        var response = ApiResponseBuilder.Success(pais, 
-                                                    $"{EntitiesConstants.PAIS} {GenericConstants.RESPONSE_EXITO_SINGULAR_MASCULINO}");
 
-        return Ok(response);
+        return pais!;
     }
+#endregion
 }

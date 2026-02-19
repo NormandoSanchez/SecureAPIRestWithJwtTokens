@@ -50,7 +50,7 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
 ### Prerrequisitos
 
 - [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) o superior
-- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superi
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) 2019 o superior
 - Editor recomendado: Visual Studio Code, Visual Studio 2022 o JetBrains Rider
 
 ### Instalación
@@ -78,7 +78,8 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
    - Configura las claves JWT y parámetros de seguridad
    - Ajusta los niveles de logging según el entorno
 
-   Para la comprobación del proyecto NO ES NECESARIO CAMBIAR NADA.
+   Para la valoración del TFM NO ES NECESARIO CAMBIAR NADA. Se apunta a BD Azure:
+   [nsm-tfm-master.database.windows.net]
 
 ### Ejecución
 
@@ -107,7 +108,10 @@ dotnet SecureAPIRestWithJwtTokens.dll
 El proyecto incluye:
 
 - `SecureAPIRestWithJwtTokens.http` - Ejemplos de todas las peticiones disponibles para probar los endpoints
-- `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados
+
+Recomendado:
+
+- `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados a la solucion publicada.
 
 ## e. Conexiones a base de datos
 
@@ -121,7 +125,7 @@ La API utiliza tres tipos de conexiones:
      - `DB_PASSWORD`: password cifrada que se desencripta en tiempo de ejecucion.
    - El helper `ConnectionStringHelper` sustituye `${DB_PASSWORD}` por la password desencriptada.
    - Para el proyecto se ha crreado una version reducida en Google Cloud.  
-      Se ha habilitado un servidor SQL en Google Cloud: 34.175.35.53,1433
+      Se ha habilitado un servidor SQL en Azure: nsm-tfm-master.database.windows.net
 
 2. **Base CentralComun (SQL directo)**
     - Base de datos diferente a la principal, de uso por la organizacion para otras operaciones.
@@ -130,11 +134,11 @@ La API utiliza tres tipos de conexiones:
        - `DBCOMUN_STRING_CONNECTION`: cadena de conexión con el placeholder `${DBCOMUN_PASSWORD}`.
        - `DBCOMUN_PASSWORD`: password cifrada que se desencripta en tiempo de ejecución.
     - El helper `ConnectionStringHelper` sustituye `${DBCOMUN_PASSWORD}` por la password desencriptada.
-    - Para el TFM se ha alojado en el mismo servidor Google SQL Cloud que la conexion anterior.
+    - Para el TFM se ha alojado en el mismo servidor que la conexion anterior.
 
-3. **Conexiones a farmacias (multi-servidor)**
-   - Los datos de servidor, base de datos y usuario se leen desde el ERP.
-   - La password se almacena cifrada en el ERP y se desencripta al conectar.
+3. **Conexiones a centros de explotación (multi-servidor)**
+   - Los datos de servidor, base de datos y usuario se recuperan desde la tabla UnidadesNegocioDB.
+   - La password se almacena cifrada en el ERP y se desencripta al conectar. (Cifrado interno)
    - Se usan en la ejecución en paralelo con `ParallelSqlExecutor`.
 
 ## f. Estructura del proyecto
@@ -216,7 +220,8 @@ SecureAPIRestWithJwtTokens/
 ├── Program.cs                         # Punto de entrada
 ├── AGENTS.md                          # Guía de buenas prácticas
 ├── Security.md                        # Documentación de seguridad
-└── SecureAPIRestWithJwtTokens.http   # Colección de peticiones HTTP
+├── SecureAPIRestWithJwtTokens.http    # Colección de peticiones HTTP
+└── SecureAPIRestWithJwtTokens.postman_collection.json # Colección peticiones HTTP para importar a Postman
 ```
 
 ## g. Funcionalidades principales
@@ -234,10 +239,10 @@ El objetivo es demostrar que el proyecto es sólido.
 
 ### Gestión Geográfica
 
-- **Países, Comunidades Autónomas, Provincias y Poblaciones:** CRUD básico con filtros avanzados
+- **Países, Comunidades Autónomas, Provincias y Poblaciones:** Listados básicos con filtros avanzados
 Requieren autorización básica, es decir la peticion debe ir con las httponly cookies recibidas tras la autentificación.
 
-### Farmacias
+### Ejecución multiple de queries
 
 - **Stock Click & Collect:** Obtención de stock en centros para servicio Click & Collect
 Ejemplo de uso de parallelexecutor, no requiere autenficación. (Ver controlador para explicación)
@@ -245,7 +250,7 @@ Ejemplo de uso de parallelexecutor, no requiere autenficación. (Ver controlador
 ### Avisos y Notificaciones
 
 - **Avisos internos:** Sistema de comunicación entre usuarios y módulos del sistema
-Requiere autentificacion y politica de permisos especifica.
+Requiere autentificacion y politica de permisos especifica. CRUD básico.
 
 ### Características técnicas
 
@@ -285,7 +290,17 @@ Requiere autentificacion y politica de permisos especifica.
 - `GET /api/Auth/session/verify` - Comprobación de sesión autenticada
 - `POST /api/auth/logout` - Cierre de sesión
 
+### Autorización
+
+Para un usuario autentificado.
+
+- `GET /api/Auth/processes/mainModules` - Obtencion de info de modulos del sistema autorizados.
+- `GET /api/Auth/processes/menuOptions` - Obtencion de info de procesos autorizados de un modulo. Para construir menu de un modulo.
+- `GET /api/Auth/processes/Codes` - Obtencion de codigos de procesos autorizados. Para generar los permisos a procesos de un asuario.
+
 ### Geografía
+
+Metodos cacheados
 
 - `GET /api/paises` - Listado de países
 - `GET /api/provincias` - Listado de provincias
@@ -304,11 +319,28 @@ Requiere autentificacion y politica de permisos especifica.
 - `GET /api/clickcollect` - Recuperar centros con stock para servir peticion Click & Collet
 
 Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
+
+Recomendado:
+
 Importa a WorkSpace en Postman o consulta el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.
+
+## Secuencia de ejecucion de EndPoints
+
+### Circuito normal
+
+- Login ->  session/verify -> refresh
+- processes/mainModules -> processes/menuOptions -> processes/Codes
+- paises -> comunidadesaut -> provincias -> Poblaciones
+- Logout
+
+### No Autorizados
+
+- Logout (por sí aún estamos autenticados)
+- session/verify (UnAuthorized)
 
 ## Referencias
 
-### Documentación oficial
+### Documtación oficial
 
 - [Documentación oficial de .NET 9](https://learn.microsoft.com/en-us/dotnet/)
 - [ASP.NET Core Web API](https://learn.microsoft.com/en-us/aspnet/core/web-api/)
@@ -320,11 +352,16 @@ Importa a WorkSpace en Postman o consulta el archivo [SecureAPIRestWithJwtTokens
 ### Documentación del proyecto
 
 - [Guía de buenas prácticas (AGENTS.md)](AGENTS.md) - Normas de desarrollo del proyecto
+
 - [Documentación de seguridad (SECURITY.md)](SECURITY.md) - Políticas y configuración de seguridad
+
 - [Colección de peticiones HTTP](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) - Ejemplos de uso de la API
-- [Colección Postman](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
-- [Ejemplo de uso de ParallelSqlExecutor](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
-- [Ejemplo de uso de SqlDataService](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\SqlDataService.md) - Uso práctico del servicio de datos SQL
+
+> **Importante:**  - [Colección Postman](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) - Importar en Postman para probar la API
+
+- [Ejemplo de uso en codigo de ParallelSqlExecutor](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\ParallelSqlExecutor.md) - Uso práctico del ejecutor paralelo de SQL
+
+- [Ejemplo de uso en codigo de SqlDataService](src\SecureAPIRestWithJwtTokens\Services\_CodeExamples\SqlDataService.md) - Uso práctico del servicio de datos SQL
 
 ### Paquetes NuGet utilizados
 

@@ -548,7 +548,7 @@
 							"query": [
 								{
 									"key": "idModulo",
-									"value": "MOD001",
+									"value": "40000000",
 									"description": "Código del módulo para filtrar las opciones de menú (opcional)"
 								}
 							]
@@ -580,7 +580,7 @@
 									"query": [
 										{
 											"key": "idModulo",
-											"value": "MOD001"
+											"value": "40000000"
 										}
 									]
 								}
@@ -983,7 +983,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://localhost:7017",
+			"value": "https://secureapirestwithjwttokens-cebsbvgacxe7fqgb.spaincentral-01.azurewebsites.net",
 			"type": "string"
 		}
 	]

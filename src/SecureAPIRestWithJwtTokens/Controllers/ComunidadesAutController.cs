@@ -51,22 +51,9 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             ResponseCacheHelper.SetResponseCacheHeadersWithVary(
                  Response,
                  _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
-                 varyByQueryKeys: "Pais");
+                 varyByQueryKeys: "pais");
 
-            var filtros = new Dictionary<string, object>();
-            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
-
-            var baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, CacheConstants.CACHE_KEY_ALL);
-            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
-            
-            if (!_memoryCache.TryGetValue(cacheKey, out List<ComunidadAutDto>? comunidades))
-            {
-                comunidades = await _comunidadAutServ.GetAllAsync(filtros) ?? throw new SimpleNotFoundException(EntitiesConstants.COMUNIDADESAUT);
-
-                // Configuracion Memory Cache
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _memoryCache.Set(cacheKey, comunidades, cacheOptions);
-            }
+            var comunidades = await GetComunidadesFromCacheAsync(pais);
 
             var response = ApiResponseBuilder.Success(comunidades, $"{EntitiesConstants.COMUNIDADESAUT} {GenericConstants.RESPONSE_EXITO_PLURAL_FEMENINO}");
 
@@ -98,19 +85,56 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
                 varyByQueryKeys: "id");
 
-            var baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, id);
-
-            if (!_memoryCache.TryGetValue(baseKey, out ComunidadAutDto? comunidadAut))
-            {
-                comunidadAut = await _comunidadAutServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.COMUNIDADESAUT, id);
-                // Configuracion Memory Cache
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _memoryCache.Set(baseKey, comunidadAut, cacheOptions);
-            }
+            var comunidadAut = await GetComunidadByIdFromCacheAsync(id);
 
             var response = ApiResponseBuilder.Success(comunidadAut, $"{EntitiesConstants.COMUNIDADAUT} {GenericConstants.RESPONSE_EXITO_SINGULAR_FEMENINO}");
 
             return Ok(response);
         }
+
+        #region Métodos privados
+        private async Task<List<ComunidadAutDto>> GetComunidadesFromCacheAsync(int? pais)
+        {
+            var filtros = new Dictionary<string, object>();
+            string baseKey;
+
+            if (pais != null)
+            {
+                filtros.Add(FilterConstants.PAIS, pais.Value);
+                baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, CacheConstants.CACHE_KEY_ALL, EntitiesConstants.PAIS, pais.Value);
+            }
+            else
+            {
+                baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, CacheConstants.CACHE_KEY_ALL);
+            }
+
+            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
+
+            if (!_memoryCache.TryGetValue(cacheKey, out List<ComunidadAutDto>? comunidades))
+            {
+                comunidades = await _comunidadAutServ.GetAllAsync(filtros) ?? throw new SimpleNotFoundException(EntitiesConstants.COMUNIDADESAUT);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _memoryCache.Set(cacheKey, comunidades, cacheOptions);
+            }
+
+            return comunidades!;
+        }
+
+        private async Task<ComunidadAutDto> GetComunidadByIdFromCacheAsync(int id)
+        {
+            var baseKey = string.Join("_", EntitiesConstants.COMUNIDADESAUT, id);
+
+            if (!_memoryCache.TryGetValue(baseKey, out ComunidadAutDto? comunidadAut))
+            {
+                comunidadAut = await _comunidadAutServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.COMUNIDADESAUT, id);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _memoryCache.Set(baseKey, comunidadAut, cacheOptions);
+            }
+
+            return comunidadAut!;
+        }
+        #endregion
     }
 }

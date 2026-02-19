@@ -57,22 +57,9 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             ResponseCacheHelper.SetResponseCacheHeadersWithVary(
                  Response,
                  _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
-                 varyByQueryKeys: "Pais, ComunidadAut, ClickCollect");
+                 varyByQueryKeys: "pais, comunidadAut, clickCollect");
 
-            var filtros = new Dictionary<string, object>();
-            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
-            if (comunidadAut != null) filtros.Add(FilterConstants.COMUNIDADAUT, comunidadAut.Value);
-            if (clickCollect != null) filtros.Add(FilterConstants.CLICK_COLLECT, clickCollect.Value);
-
-            var baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, CacheConstants.CACHE_KEY_ALL);
-            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
-
-            if (!_memoryCache.TryGetValue(cacheKey, out List<ProvinciaDto>? provincias))
-            {
-                provincias = await _provinciaServ.GetAllAsync(filtros.Count > 0 ? filtros : null) ?? throw new SimpleNotFoundException(EntitiesConstants.PROVINCIAS);
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _memoryCache.Set(cacheKey, provincias, cacheOptions);
-            }
+            var provincias = await GetProvinciasFromCacheAsync(pais, comunidadAut, clickCollect);
 
             var response = ApiResponseBuilder.Success(provincias, $"{EntitiesConstants.PROVINCIAS} {GenericConstants.RESPONSE_EXITO_PLURAL_FEMENINO}");
 
@@ -103,19 +90,62 @@ namespace SecureAPIRestWithJwtTokens.Controllers
                 _configuration.CacheSettings.ResponseCache.SlowChangeDataDurationSeconds,
                 varyByQueryKeys: "id");
 
-            var baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, id);
-
-            if (!_memoryCache.TryGetValue(baseKey, out ProvinciaDto ? provincia))
-            {
-                provincia = await _provinciaServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.PROVINCIAS, id);
-                // Configuracion Memory Cache
-                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
-                _memoryCache.Set(baseKey, provincia, cacheOptions);
-            }
+            var provincia = await GetProvinciaByIdFromCacheAsync(id);
 
             var response = ApiResponseBuilder.Success(provincia, $"{EntitiesConstants.PROVINCIA} {GenericConstants.RESPONSE_EXITO_SINGULAR_FEMENINO}");
 
             return Ok(response);
         }
+
+        #region Métodos privados
+        private async Task<List<ProvinciaDto>> GetProvinciasFromCacheAsync(int? pais, int? comunidadAut, bool? clickCollect)
+        {
+            var filtros = new Dictionary<string, object>();
+            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
+            if (comunidadAut != null) filtros.Add(FilterConstants.COMUNIDADAUT, comunidadAut.Value);
+            if (clickCollect != null) filtros.Add(FilterConstants.CLICK_COLLECT, clickCollect.Value);
+
+            string baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, CacheConstants.CACHE_KEY_ALL);
+            if (pais != null)
+            {
+                baseKey += string.Join("_", EntitiesConstants.PAIS, pais.Value);
+            }
+            else if (comunidadAut != null)
+            {
+                baseKey = string.Join("_", EntitiesConstants.COMUNIDADAUT, comunidadAut.Value);
+            }
+            else if (clickCollect != null)
+            {
+                baseKey = string.Join("_", FilterConstants.CLICK_COLLECT, clickCollect.Value);
+            }
+
+            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
+
+            if (!_memoryCache.TryGetValue(cacheKey, out List<ProvinciaDto>? provincias))
+            {
+                provincias = await _provinciaServ.GetAllAsync(filtros.Count > 0 ? filtros : null) ?? throw new SimpleNotFoundException(EntitiesConstants.PROVINCIAS);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _memoryCache.Set(cacheKey, provincias, cacheOptions);
+            }
+
+            return provincias!;
+        }
+
+        private async Task<ProvinciaDto> GetProvinciaByIdFromCacheAsync(int id)
+        {
+            var baseKey = string.Join("_", EntitiesConstants.PROVINCIAS, id);
+
+            if (!_memoryCache.TryGetValue(baseKey, out ProvinciaDto? provincia))
+            {
+                provincia = await _provinciaServ.GetByIdAsync(id) ?? throw new SimpleNotFoundException(EntitiesConstants.PROVINCIAS, id);
+
+                var cacheOptions = MemoryCacheHelper.CreateSlowChangeDataCacheOptions(_configuration);
+                _memoryCache.Set(baseKey, provincia, cacheOptions);
+            }
+
+            return provincia!;
+        }
+        #endregion
     }
 }
