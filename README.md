@@ -322,7 +322,7 @@ Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTo
 
 Recomendado:
 
-Importa a WorkSpace en Postman o consulta el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.
+Importar a WorkSpace en Postman el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.
 
 ## Secuencia de ejecucion de EndPoints
 

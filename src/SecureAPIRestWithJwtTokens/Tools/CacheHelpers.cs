@@ -1,4 +1,5 @@
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
+using Microsoft.AspNetCore.ResponseCaching;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -67,9 +68,19 @@ namespace SecureAPIRestWithJwtTokens.Tools
                     MaxAge = TimeSpan.FromSeconds(durationSeconds)
                 };
 
-                if (varyByQueryKeys.Length > 0)
+                var normalizedKeys = varyByQueryKeys
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .SelectMany(x => x.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+
+                if (normalizedKeys.Length > 0)
                 {
-                    response.Headers.Vary = string.Join(", ", varyByQueryKeys);
+                    var cachingFeature = response.HttpContext.Features.Get<IResponseCachingFeature>();
+                    if (cachingFeature != null)
+                    {
+                        cachingFeature.VaryByQueryKeys = normalizedKeys;
+                    }
                 }
             }
         }

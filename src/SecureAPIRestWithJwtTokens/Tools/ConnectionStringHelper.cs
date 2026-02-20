@@ -51,7 +51,8 @@ public class ConnectionStringHelper(ICryptoGraphicService cryptoService)
         return await GetConnectionString(
             EnvironmentConstants.DBCOMUN_PASSWORD,
             EnvironmentConstants.DBCOMUN_STRING_CONNECTION,
-            EnvironmentConstants.DB_COMUN_PASSWORD_TOKEN);
+            EnvironmentConstants.DB_COMUN_PASSWORD_TOKEN,
+            false);
     }
 
     /// <summary>

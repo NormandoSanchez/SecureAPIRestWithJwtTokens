@@ -847,7 +847,7 @@
 					"response": []
 				},
 				{
-					"name": "Provincias - Get All",
+					"name": "Provincias - Get All Click&Collect",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -858,7 +858,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/Provincias?Pais=1&ComunidadAut=2&ClickCollect=true",
+							"raw": "{{baseUrl}}/api/Provincias?ClickCollect=true",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -868,13 +868,40 @@
 							],
 							"query": [
 								{
-									"key": "Pais",
-									"value": "1",
-									"description": "Filtro opcional por pais"
-								},
+									"key": "ClickCollect",
+									"value": "true",
+									"description": "Filtro opcional por disponibilidad Click&Collect"
+								}
+							]
+						},
+						"description": "Obtiene la lista de provincias con filtros opcionales. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				},
+				{
+					"name": "Provincias - Get All Click&Collect por Comunidad Autonoma",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Provincias?ComunidadAut=10&ClickCollect=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Provincias"
+							],
+							"query": [
 								{
 									"key": "ComunidadAut",
-									"value": "2",
+									"value": "10",
 									"description": "Filtro opcional por comunidad autonoma"
 								},
 								{

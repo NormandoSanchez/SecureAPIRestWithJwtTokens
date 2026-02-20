@@ -100,23 +100,27 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         #region Métodos privados
         private async Task<List<ProvinciaDto>> GetProvinciasFromCacheAsync(int? pais, int? comunidadAut, bool? clickCollect)
         {
-            var filtros = new Dictionary<string, object>();
-            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
-            if (comunidadAut != null) filtros.Add(FilterConstants.COMUNIDADAUT, comunidadAut.Value);
-            if (clickCollect != null) filtros.Add(FilterConstants.CLICK_COLLECT, clickCollect.Value);
-
+            var hasPaisFilter = pais.HasValue;
+            var hasComunidadAutFilter = comunidadAut.HasValue;
+            var hasClickCollectFilter = clickCollect.HasValue;
+            Dictionary<string, object> filtros = [];
+            
+            if (hasPaisFilter) filtros.Add(FilterConstants.PAIS, pais!.Value);
+            if (hasComunidadAutFilter) filtros.Add(FilterConstants.COMUNIDADAUT, comunidadAut!.Value);
+            if (hasClickCollectFilter) filtros.Add(FilterConstants.CLICK_COLLECT, clickCollect!.Value);
+            
             string baseKey = string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, CacheConstants.CACHE_KEY_ALL);
-            if (pais != null)
+            if (hasPaisFilter)
             {
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais!.Value);
             }
-            else if (comunidadAut != null)
+            else if (hasComunidadAutFilter)
             {
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_COMAUT, comunidadAut.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_COMAUT, comunidadAut!.Value);
             }
-            else if (clickCollect != null)
+            else if (hasClickCollectFilter)
             {
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_CLICK_COLLECT, clickCollect.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_CLICK_COLLECT, clickCollect!.Value);
             }
 
             var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);

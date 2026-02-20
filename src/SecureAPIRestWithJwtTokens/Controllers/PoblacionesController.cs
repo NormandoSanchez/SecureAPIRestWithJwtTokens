@@ -94,19 +94,22 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         #region Métodos privados
         private async Task<List<PoblacionDto>> GetPoblacionesFromCacheAsync(int? pais, int? provincia)
         {
-            var filtros = new Dictionary<string, object>();
+            var hasPaisFilter = pais.HasValue;
+            var hasProvinciaFilter = provincia.HasValue;
+            
+            Dictionary<string, object> filtros = []     ;
 
-            if (pais != null) filtros.Add(FilterConstants.PAIS, pais.Value);
-            if (provincia != null) filtros.Add(FilterConstants.PROVINCIA, provincia.Value);
-
+            if (hasPaisFilter) filtros.Add(FilterConstants.PAIS, pais!.Value);
+            if (hasProvinciaFilter) filtros.Add(FilterConstants.PROVINCIA, provincia!.Value);
+            
             var baseKey = string.Join("_", CacheConstants.CACHE_KEY_POBLACION, CacheConstants.CACHE_KEY_ALL);
-            if (pais != null)
+            if (hasPaisFilter)
             {
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais!.Value);
             }
-            if (provincia != null)
+            if (hasProvinciaFilter)
             {
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, provincia.Value);
+                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PROVINCIA, provincia!.Value);
             }
 
             var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);

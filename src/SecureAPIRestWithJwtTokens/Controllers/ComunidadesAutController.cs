@@ -95,17 +95,16 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         #region Métodos privados
         private async Task<List<ComunidadAutDto>> GetComunidadesFromCacheAsync(int? pais)
         {
-            var filtros = new Dictionary<string, object>();
-            string baseKey = string.Join("_", CacheConstants.CACHE_KEY_COMAUT, CacheConstants.CACHE_KEY_ALL);
+            var hasPaisFilter = pais.HasValue;
+            var filtros = hasPaisFilter
+                ? new Dictionary<string, object> { { FilterConstants.PAIS, pais!.Value } }
+                : null;
 
-            if (pais != null)
-            {
-                filtros.Add(FilterConstants.PAIS, pais.Value);
-                baseKey += "_" + string.Join("_", CacheConstants.CACHE_KEY_PAIS, pais.Value);
-            }
-           
+            var baseKey = hasPaisFilter
+                ? string.Join("_", CacheConstants.CACHE_KEY_COMAUT, CacheConstants.CACHE_KEY_ALL, CacheConstants.CACHE_KEY_PAIS, pais!.Value)
+                : string.Join("_", CacheConstants.CACHE_KEY_COMAUT, CacheConstants.CACHE_KEY_ALL, "EMPTY");
 
-            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros.Count > 0 ? filtros : null);
+            var cacheKey = CacheKeyHelper.BuildKey(baseKey, filtros);
 
             if (!_memoryCache.TryGetValue(cacheKey, out List<ComunidadAutDto>? comunidades))
             {

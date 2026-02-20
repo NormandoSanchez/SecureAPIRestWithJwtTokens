@@ -35,7 +35,7 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
             if (SoloFarmaciasCC)
             {
                 _logger.LogInformation("Recuperando todas las provincias con farmacias Click&Collect.");
-                return await GetProvinciasConFarmaciasCCAsync();
+                return await GetProvinciasConFarmaciasCCAsync(IdPais, IdComunidadAut);
             }
             else
             {
@@ -66,58 +66,6 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
                                     .ToListAsync();
                 }
             }
-        }
-
-        /// <summary>
-        /// Obtiene las provincias que tienen al menos una farmacia con servicio ClickCollect.
-        /// </summary>
-        /// <returns>Una colección de entidades <see cref="Provincia"/>.</returns>
-        private async Task<List<Provincia>> GetProvinciasConFarmaciasCCAsync()
-        {
-            await using var sqlService = _sqlFactory.CreateService();
-            var helper = new ConnectionStringHelper(_cryptoGraphicService);
-            FarmaciaDBConnectionInternal? dbConnection = await helper.GetComunDBConnection();
-            if (dbConnection != null)
-            {
-                 await sqlService.GetConnection(dbConnection);
-                 // Construir query
-                var query = QueryConstants.GET_CENTRALCOMUN_FARMACIAS_CLICK_COLLECT;
-                var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text);
-                var farmaciasCC = result.MapToList<FarmaciaCCDto>() ?? [];
-                 // Si no hay farmacias con C&C, devolvemos una lista vacía inmediatamente.
-                if (farmaciasCC.Count == 0)
-                {
-                    return [];
-                }
-                
-                // Extraemos  los IDs a un HashSet para una búsqueda ultra rápida (O(1)).
-                var farmaciasCCIds = farmaciasCC.Select(f => f.IdFarmacia).ToHashSet();
-
-                var unidadesNegocioData = await _context.UnidadNegocioDirecciones
-                                                    .Include(ud => ud.Dir)
-                                                    .ThenInclude(d => d.Provincia)
-                                                    .Include(ud => ud.UnidadNegocio)
-                                                    .Where(ud => ud.DirDefecto &&
-                                                          ud.UnidadNegocio.UnnActiva &&
-                                                          !ud.UnidadNegocio.UnnEsAlmacen &&
-                                                          !ud.UnidadNegocio.UnnEsCentral)
-                                                     .ToListAsync();
-                
-                var listaRet = unidadesNegocioData.Where(ud => farmaciasCCIds.Contains(ud.UnidadNegocio.UnnTrebol.Substring(1, 4)))
-                                              .Select(ud => ud.Dir.Provincia)
-                                              .Distinct()
-                                              .OrderBy(p => p.PrvNombre)
-                                              .ToList();
-
-                _logger.LogInformation("Se han recuperado {Count} provincias con farmacias Click&Collect.",
-                                    listaRet.Count);
-                return listaRet;
-            }
-            else
-            {
-                _logger.LogError("No se pudo obtener la conexión a la base de datos común para recuperar las farmacias Click&Collect.");
-                return [];
-            }            
         }
 
         /// <summary>
@@ -208,5 +156,74 @@ namespace SecureAPIRestWithJwtTokens.Repository.Geographics
             await Task.Delay(5);
             throw new NotImplementedException();
         }
+
+        #region Métodos privados
+        /// <summary>
+        /// Obtiene las provincias que tienen al menos una farmacia con servicio ClickCollect.
+        /// </summary>
+        /// <param name="pais">Filtro opcional por país. Si se proporciona, solo se considerarán provincias de ese país.</param>
+        /// <param name="comunidadAut">Filtro opcional por comunidad autónoma. Si se proporciona, solo se considerarán provincias de esa comunidad autónoma.</param>
+        /// <returns>Una colección de entidades <see cref="Provincia"/>.</returns>
+        private async Task<List<Provincia>> GetProvinciasConFarmaciasCCAsync(int pais, int comunidadAut)
+        {
+            try
+            {
+                await using var sqlService = _sqlFactory.CreateService();
+                var helper = new ConnectionStringHelper(_cryptoGraphicService);
+                FarmaciaDBConnectionInternal? dbConnection = await helper.GetComunDBConnection();
+                if (dbConnection == null)
+                {
+                    _logger.LogError("No se pudo obtener la conexión a la base de datos común para recuperar las farmacias Click&Collect.");
+                    return [];
+                }
+
+                bool connectionOpened = await sqlService.GetConnection(dbConnection);
+                if (!connectionOpened)
+                {
+                    _logger.LogError("No se pudo abrir la conexión SQL con servidor {Server} y base de datos {Database}.",
+                                     dbConnection.Server,
+                                     dbConnection.DataBase);
+                    return [];
+                }
+
+                var query = QueryConstants.GET_CENTRALCOMUN_FARMACIAS_CLICK_COLLECT;
+                var result = await sqlService.ExecuteQueryAsync(query, CommandType.Text);
+                var farmaciasCC = result.MapToList<FarmaciaCCDto>() ?? [];
+                if (farmaciasCC.Count == 0)
+                {
+                    return [];
+                }
+
+                var farmaciasCCIds = farmaciasCC.Select(f => f.IdFarmacia).ToHashSet();
+
+                var unidadesNegocioData = await _context.UnidadNegocioDirecciones
+                                                    .Include(ud => ud.Dir)
+                                                    .ThenInclude(d => d.Provincia)
+                                                    .Include(ud => ud.UnidadNegocio)
+                                                    .Where(ud => ud.DirDefecto &&
+                                                          ud.UnidadNegocio.UnnActiva &&
+                                                          !ud.UnidadNegocio.UnnEsAlmacen &&
+                                                          !ud.UnidadNegocio.UnnEsCentral)
+                                                     .ToListAsync();
+
+                var listaRet = unidadesNegocioData.Where(ud => farmaciasCCIds.Contains(ud.UnidadNegocio.UnnTrebol.Substring(1, 4)))
+                                              .Select(ud => ud.Dir.Provincia)
+                                              .Where(p => p.PaiId == pais || pais == FilterConstants.ALL)
+                                              .Where(p => p.CauId == comunidadAut || comunidadAut == FilterConstants.ALL)
+                                              .Distinct()
+                                              .OrderBy(p => p.PrvNombre)
+                                              .ToList();
+
+                _logger.LogInformation("Se han recuperado {Count} provincias con farmacias Click&Collect.",
+                                    listaRet.Count);
+                return listaRet;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al recuperar provincias con farmacias Click&Collect desde la base de datos común.");
+                return [];
+            }
+        }
+#endregion
     }
 }
