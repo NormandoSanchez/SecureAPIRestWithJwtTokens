@@ -45,6 +45,7 @@ public class ClickCollectController(IStockFarmaciaCCResultService stockFarmaciaC
     /// ¡¡IMPORTANTE!! Por compatibilidad con versiones anteriores mantenemos el endpoint /api/stockFarmacia/{arts}/{uds}/{farmaini}
     /// </remarks>
     [HttpGet("StockFarmacia/{arts}/{uds}/{farmaini}")]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     [ProducesResponseType(typeof(ApiResponse<List<StockFarmaciaDto>>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> GetStockFarmaciasCC(
@@ -52,8 +53,6 @@ public class ClickCollectController(IStockFarmaciaCCResultService stockFarmaciaC
         [FromRoute] string uds,
         [FromRoute] string farmaini)
     {
-        ResponseCacheHelper.DisableCache(Response);
-
         // Crear el objeto request para validación
         var request = new StockFarmaciaCCRequest
         {
