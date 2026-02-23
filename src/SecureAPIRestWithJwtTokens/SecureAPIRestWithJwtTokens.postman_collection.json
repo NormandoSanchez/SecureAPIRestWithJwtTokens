@@ -9,7 +9,7 @@
 	"item": [
 		{
 			"name": "Flujo de prueba ordenado",
-			"description": "Secuencia recomendada de pruebas con encadenamiento automático en Postman: Login -> Session Verify (valid) -> Endpoint protegido -> Logout -> Session Verify (invalid)",
+			"description": "Secuencia recomendada de pruebas con encadenamiento automático en Postman: Login -> Session Verify (valid) -> GetMainModules (Protegido) -> GetAuthProcessCodes (Protegido) -> Endpoint desprotegido -> Refresh -> Logout -> Session Verify (invalid)",
 			"item": [
 				{
 					"name": "Flujo - Login",
@@ -75,7 +75,7 @@
 									"pm.test('Session verify válida responde 200', function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"pm.execution.setNextRequest('Flujo - Paises - Get All');"
+									"pm.execution.setNextRequest('Flujo - Auth - Get Main Modules');"
 								]
 							}
 						}
@@ -99,6 +99,86 @@
 								"Auth",
 								"session",
 								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Auth - Get Main Modules",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('GetMainModules responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Auth - Get Auth Process Codes');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/processes/mainModules",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"processes",
+								"mainModules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Auth - Get Auth Process Codes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('GetAuthProcessCodes responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Paises - Get All');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/processes/Codes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"processes",
+								"Codes"
 							]
 						}
 					},
