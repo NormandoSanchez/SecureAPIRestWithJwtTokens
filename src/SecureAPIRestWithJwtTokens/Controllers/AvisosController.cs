@@ -36,19 +36,17 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         /// Devuelve la lista de avisos internos para el usuario con ID 2, excluyendo los vistos e incluyendo no vistos antiguos.\
         /// GET api/Avisos/2?vistos=true \
         /// Devuelve la lista de avisos internos para el usuario con ID 2, incluyendo los vistos e excluyendo antiguos.\
-        /// Requiere autorización para acceder.
+        /// Requiere autorización y permisos específicos para acceder.
         /// </remarks>
         [ProcesoAuthorize (ProcessConstants.Avisos)]
         [HttpGet]
         [Route ("{idUsuario}")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [ProducesResponseType(typeof(ApiResponse<List<AvisoInternoDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromRoute] int idUsuario,
                                                 [FromQuery] bool vistos = true,
                                                 [FromQuery] bool antiguos = false)
-        {
-            // Deshabilitar caché para avisos internos
-            ResponseCacheHelper.DisableCache(Response);
-            
+        {   
             var filtros = new Dictionary<string, object>();
             List<AvisoInternoDto>? avisos;
 

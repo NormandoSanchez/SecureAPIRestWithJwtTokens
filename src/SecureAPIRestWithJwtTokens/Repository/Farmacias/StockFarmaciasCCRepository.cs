@@ -35,7 +35,7 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
         {   
             // Parametro FarmaciaInicial 
             string? codFarmacia = Common.ParseStringFilter(filtros, FilterConstants.FARMAINI);
-
+                                    
             // Parametro Articulos
             List<string> lstArticulos = filtros == null ? [] : ProcesarFiltroArticulos(filtros); // Lista de articulos solicitados
             Dictionary<string, int> lstStocks = CrearListaStocks(lstArticulos); // Lista de articulos y stocks
@@ -48,6 +48,10 @@ namespace SecureAPIRestWithJwtTokens.Repository.Farmacias
             {
                 return [];      
             }
+
+            // Si es el valor por defecto, se interpreta como que no se ha indicado un código de farmacia inicial concreto
+            // y se buscan todas las farmacias C&C.
+            codFarmacia = codFarmacia == DefaultConstants.FARMAINI ? null : codFarmacia; 
 
             // Obtener Farmacias con C&C 
             List<FarmaciaStock> farmaciasCC = await GetFarmaciasCC(codFarmacia);

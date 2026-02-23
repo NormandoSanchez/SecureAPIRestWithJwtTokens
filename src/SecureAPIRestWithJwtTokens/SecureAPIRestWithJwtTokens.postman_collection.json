@@ -1005,6 +1005,83 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Click&Collect",
+			"item": [
+				{
+					"name": "GetStockFarmaciasCC",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/ClickCollect/StockFarmacia/000001|000002/1|2/0000",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ClickCollect",
+								"StockFarmacia",
+								"000323|001202",
+								"1|2",
+								"0000"
+							]
+						},
+						"description": "Obtiene una lista de farmacias Click & Collect donde los artículos cumplen el stock mínimo indicado.\n\n**Parámetros de ruta:**\n- `arts`: CN separados por `|`\n- `uds`: Unidades mínimas separadas por `|`\n- `farmaini`: `0000` para todas o código de farmacia concreta"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Avisos",
+			"item": [
+				{
+					"name": "Avisos - Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Avisos/1?vistos=true&antiguos=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Avisos",
+								"1"
+							],
+							"query": [
+								{
+									"key": "vistos",
+									"value": "true",
+									"description": "Opcional: incluir avisos vistos"
+								},
+								{
+									"key": "antiguos",
+									"value": "true",
+									"description": "Opcional: incluir avisos antiguos"
+								}
+							]
+						},
+						"description": "Obtiene la lista de avisos internos por usuario con filtros opcionales de vistos y antiguos. Requiere autenticacion por cookie HttpOnly."
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [

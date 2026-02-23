@@ -16,4 +16,5 @@ public static class DefaultConstants
     public const int MAXCONCURRENTCONNECTIONS = 50;
     public const string SQL_COLLATION = "Modern_Spanish_CI_AS";
     public const int PAIS = 1; // España
+    public const string FARMAINI = "0000";
 }

@@ -7,9 +7,11 @@ using SecureAPIRestWithJwtTokens.Models.DTO;
 using SecureAPIRestWithJwtTokens.Models.Entities;
 using SecureAPIRestWithJwtTokens.Models.InternalDTO;
 using SecureAPIRestWithJwtTokens.Repository;
+using SecureAPIRestWithJwtTokens.Repository.Avisos;
 using SecureAPIRestWithJwtTokens.Repository.Farmacias;
 using SecureAPIRestWithJwtTokens.Repository.Geographics;
 using SecureAPIRestWithJwtTokens.Services;
+using SecureAPIRestWithJwtTokens.Services.Avisos;
 using SecureAPIRestWithJwtTokens.Services.Farmacias;
 using SecureAPIRestWithJwtTokens.Services.Geographics;
 using SecureAPIRestWithJwtTokens.Tools;
@@ -304,6 +306,9 @@ namespace SecureAPIRestWithJwtTokens.Extensions
             builder.Services.AddScoped<IGenericService<ComunidadAutDto>, ComunidadAutService>();
             builder.Services.AddScoped<IGenericService<ProvinciaDto>, ProvinciaService>();
             builder.Services.AddScoped<IGenericService<PoblacionDto>, PoblacionService>();
+
+            // Avisos
+            builder.Services.AddScoped<IGenericService<AvisoInternoDto>, AvisoService>();
             
             // Farmacias
             builder.Services.AddScoped<IStockFarmaciaCCResultService, StockFarmaciasCCService>();
@@ -323,6 +328,10 @@ namespace SecureAPIRestWithJwtTokens.Extensions
             builder.Services.AddScoped<IGenericRepository<ComunidadAut>, ComunidadAutRepository>();
             builder.Services.AddScoped<IGenericRepository<Provincia>, ProvinciaRepository>();
             builder.Services.AddScoped<IGenericRepository<Poblacion>, PoblacionRepository>();
+
+            // Avisos
+            builder.Services.AddScoped<IGenericRepository<AvisoInterno>, AvisoRepository>();
+
             // Farmacias    
             builder.Services.AddScoped<IGenericRepository<FarmaciaStock>, StockFarmaciasCCRepository>();
         }

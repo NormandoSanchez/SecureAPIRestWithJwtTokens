@@ -279,6 +279,7 @@ namespace SecureAPIRestWithJwtTokens.Controllers
         /// <response code="200">Sesión válida con información del usuario</response>
         /// <response code="401">Sesión inválida o expirada</response>
         [HttpGet("session/verify")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         [ProducesResponseType(typeof(ApiResponse<SessionVerifyResult>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
         [Authorize]
@@ -287,7 +288,6 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             string _msg;
 
             _logger.LogInformation(AuthTextConstants.AUTH_SESSION_VERIFICATION);
-            ResponseCacheHelper.DisableCache(Response);
 
             var result = await _jwtService.SessionVerify(HttpContext);
 
@@ -363,7 +363,6 @@ namespace SecureAPIRestWithJwtTokens.Controllers
             return await HandleUserProfileAction(
                 AuthTextConstants.AUTH_PROFILE_MENU_OPTIONS_RETRIEVAL_ATTEMPT,
                 AuthTextConstants.AUTH_PROFILE_MENU_OPTIONS_RETRIEVAL_OK,
-                
                 async (userId, perfilId, userName) =>
                 {
                     // Intentar obtener de caché MemoryCache

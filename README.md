@@ -11,10 +11,14 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
    Cada centro de explotación dispone de un sistema informático propio para su gestión interna. Todos los centros de explotación disponen del mismo sistema en servidores propios.
    Estos servidores son accesibles, pero pueden sufrir desconexiones puntuales por averia u otras incidencias.
 
-   La aplicación de gestión de los centros de explotación no es gestionado por la organización, es un paquete comercial.
+   Actualmente existe un ERP (monolito) del 2014 MVC 4. Este sistema se ha quedado obsoleto.
+   El objetivo de este proyecto es sustituir el ERP actual.
+
+   La aplicación de cada centro de explotación no es gestionada por la organización, es un paquete comercial.
    El conocimiento de este paquete es amplio pero no completo. Se dispone de acceso completo a la base de datos SQL de este paquete.
 
-   En una ubicación que denominaremos Central, se alojará el resultado de este proyecto (API)
+   En una ubicación que denominaremos Central, se alojará el resultado de este proyecto (API) junto con el cliente web/movil por desarrollar.
+
    En Central se mantiene una base de datos que debe alimentar y mantener sincronización con cada uno de los sistemas propios de gestión. Artículos, Clientes, etc.
    Las principales problemáticas a cubrir son:
       Seguridad.
@@ -73,13 +77,21 @@ API RESTful empresarial desarrollada en .NET 9 con autenticación JWT robusta, g
    dotnet restore
    ```
 
-4. Configura las cadenas de conexión en `appsettings.json` o `appsettings.Development.json`:
-   - Actualiza las conexiones a la base de datos
-   - Configura las claves JWT y parámetros de seguridad
-   - Ajusta los niveles de logging según el entorno
+4. Bases de datos
 
    Para la valoración del TFM NO ES NECESARIO CAMBIAR NADA. Se apunta a BD Azure:
    [nsm-tfm-master.database.windows.net]
+
+   Configura las cadenas de conexión en `launchSettings.json`:
+   - Actualiza las conexiones a las bases de datos
+      DB_STRING_CONNECTION - Cadena de conecxion a la BD principal (EF Core)
+      DB_PASSWORD - Password encriptada con claves internas
+
+      DBCOMUN_STRING_CONNECTION - Cadena de conexion a BD (En esta version son la misma)
+      DBCOMUN_PASSWORD - Password encriptada con claves internas
+
+   - Configura la SecretKey JWT en `appsettings.json`
+      Texto encriptado con claves internas  
 
 ### Ejecución
 
@@ -91,8 +103,15 @@ dotnet run --project SecureAPIRestWithJwtTokens.csproj
 
 La API estará disponible en:
 
+Ejecutando desde Codigo:
+
 - HTTPS: `https://localhost:7017/index.html`
 - Swagger UI: `https://localhost:7017/index.html`
+
+Despliegue:
+
+- HTTPS: `https://secureapirestwithjwttokens-cebsbvgacxe7fqgb.spaincentral-01.azurewebsites.net/index.html`
+- Swagger UI: `https://secureapirestwithjwttokens-cebsbvgacxe7fqgb.spaincentral-01.azurewebsites.net/index.html`
 
 #### Producción
 
@@ -103,13 +122,9 @@ cd publish
 dotnet SecureAPIRestWithJwtTokens.dll
 ```
 
-### Archivos de pruebas
+### Archivos para probar el despliegue
 
 El proyecto incluye:
-
-- `SecureAPIRestWithJwtTokens.http` - Ejemplos de todas las peticiones disponibles para probar los endpoints
-
-Recomendado:
 
 - `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados a la solucion publicada.
 
@@ -145,83 +160,68 @@ La API utiliza tres tipos de conexiones:
 
 ```text
 SecureAPIRestWithJwtTokens/
-├── Authorization/                     # Sistema de autorización personalizado
-│   ├── ProcesoAuthorizationPolicyProvider.cs
-│   ├── ProcesoAuthorizeAttribute.cs
-│   └── ProcesoClaimRequirement.cs
-├── Constants/                         # Constantes organizadas por dominio
-│   ├── AuthConstants.cs              # Constantes de autenticación
-│   ├── CacheConstants.cs             # Configuración de caché
-│   ├── EntitiesConstants.cs          # Entidades del dominio
-│   ├── EnvironmentConstants.cs       # Variables de entorno
-│   ├── GenericConstants.cs           # Constantes genéricas
-│   ├── ModulesConstants.cs           # Módulos del sistema
-│   ├── ProcessConstants.cs           # Procesos de negocio
-│   └── QueryConstants.cs             # Consultas SQL predefinidas
-├── Controllers/                       # Endpoints de la API REST
-│   ├── AuthController.cs             # Autenticación y autorización
-│   ├── AvisosController.cs           # Gestión de avisos
-│   ├── ClickCollectController.cs     # Click & Collect de farmacias
-│   ├── ComunidadesAutController.cs   # Comunidades Autónomas
-│   ├── PaisesController.cs           # Gestión de países
-│   ├── PoblacionesController.cs      # Gestión de poblaciones
-│   └── ProvinciasController.cs       # Gestión de provincias
-├── DataContexts/                      # Contextos de Entity Framework
-│   ├── TrebolDbContext.cs            # Contexto principal
-│   └── TrebolDbContextFactory.cs     # Factory para migraciones
-├── Exceptions/                        # Excepciones personalizadas
-│   └── ApiExceptions.cs              # Excepciones de la API
-├── Extensions/                        # Métodos de extensión
-│   └── WebApplicationExtensions.cs   # Configuración del pipeline
-├── Logs/                              # Archivos de log (Serilog)
-│   ├── log-YYYYMMDD.txt             # Logs rotativos por fecha
-├── Mappings/                          # Perfiles de AutoMapper
-│   ├── AuthMappingProfile.cs
-│   ├── AvisosInernosMappingProfile.cs
-│   ├── DireccionMappingProfile.cs
-│   ├── FarmaciaStockProfile.cs
-│   └── GeografiaMappingProfile.cs
-├── Middleware/                        # Middlewares personalizados
-│   ├── ExceptionHandlerMIddleware.cs
-│   └── GlobalExceptionHandlerMiddleware.cs
-├── Models/                            # Modelos de datos
-│   ├── DTO/                          # Data Transfer Objects
-│   ├── Entities/                     # Entidades de base de datos
-│   ├── InternalDTO/                  # DTOs internos
-│   └── Responses/                    # Respuestas estándar
-├── Repository/                        # Capa de acceso a datos
-│   ├── IGenericRepository.cs         # Interfaz genérica
-│   ├── SecurityRepository.cs         # Repositorio de seguridad
-│   ├── UserRepository.cs             # Repositorio de usuarios
-│   ├── Avisos/                       # Repositorios de avisos
-│   ├── Farmacias/                    # Repositorios de farmacias
-│   └── Geographics/                  # Repositorios de geografía
-├── Services/                          # Lógica de negocio
-│   ├── AuthService.cs                # Servicio de autenticación
-│   ├── CircuitBreakerService.cs      # Patrón Circuit Breaker
-│   ├── CryptoGraphicService.cs       # Cifrado/descifrado
-│   ├── JwtService.cs                 # Generación de JWT
-│   ├── MappingService.cs             # Servicio de mapeo
-│   ├── ParallelSqlExecutor.cs        # Ejecución paralela SQL
-│   ├── SqlDataService.cs             # Servicio de datos SQL
-│   ├── IGenericService.cs            # Interfaz genérica
-│   ├── ISqlDataSqlFactoryService.cs  # Factory de datos
-│   ├── Avisos/                       # Servicios de avisos
-│   ├── Farmacias/                    # Servicios de farmacias
-│   └── Geographics/                  # Servicios de geografía
-├── Tools/                             # Utilidades auxiliares
-│   ├── CacheHelpers.cs               # Helpers de caché
-│   ├── DataSetExtensions.cs          # Extensiones de DataSet
-│   ├── Enum.cs                       # Enumeraciones
-│   ├── Sanitizer.cs                  # Sanitización de entradas
-│   └── Tools.cs                      # Herramientas generales
-├── appsettings.json                   # Configuración base
-├── appsettings.Development.json       # Configuración de desarrollo
-├── Program.cs                         # Punto de entrada
-├── AGENTS.md                          # Guía de buenas prácticas
-├── Security.md                        # Documentación de seguridad
-├── SecureAPIRestWithJwtTokens.http    # Colección de peticiones HTTP
-└── SecureAPIRestWithJwtTokens.postman_collection.json # Colección peticiones HTTP para importar a Postman
+├── .github/                                    # Configuración de GitHub Actions/workflows
+├── .vscode/                                    # Configuración local del editor
+├── src/
+│   └── SecureAPIRestWithJwtTokens/             # Proyeto Web API
+│       ├── Authorization/                      # Sistema de autorización personalizado
+│       ├── Constants/                          # Constantes organizadas por dominio
+│       ├── Controllers/                        # Endpoints de la API REST
+│       ├── DataContexts/                       # Contextos de Entity Framework
+│       ├── Exceptions/                         # Excepciones personalizadas
+│       ├── Extensions/                         # Registro de servicios y pipeline
+│       ├── Logs/                               # Logs de ejecución (Serilog)
+│       ├── Mappings/                           # Perfiles de AutoMapper
+│       ├── Middleware/                         # Middlewares personalizados
+│       ├── Models/                             # DTO, entidades y respuestas
+│       │   ├── DTO/                            
+│       │   ├── Entities/                       # Definición de BD para EF Core 
+│       │   ├── InternalDTO/                    # DTOs de uso interno 
+│       │   └── Responses/                      # DTOs de respuesta 
+│       ├── Repository/                         # Capa de acceso a datos
+│       │   ├── Avisos/
+│       │   ├── Farmacias/
+│       │   ├── Geographics/
+│       │   ├── Interfaces/
+│       │   ├── SecurityRepository.cs
+│       │   └── UserRepository.cs
+│       ├── Services/                           # Lógica de negocio
+│       │   ├── Avisos/
+│       │   ├── Farmacias/
+│       │   ├── Geographics/
+│       │   ├── Interfaces/
+│       │   ├── _CodeExamples/                  # Ejemplos de uso 
+│       │   ├── AuthService.cs
+│       │   ├── CircuitBreakerService.cs
+│       │   ├── CryptoGraphicService.cs
+│       │   ├── JwtService.cs
+│       │   ├── MappingService.cs
+│       │   ├── ParallelSqlExecutor.cs
+│       │   └── SqlDataService.cs
+│       ├── Tools/                              # Utilidades auxiliares
+│       │   ├── CacheHelpers.cs
+│       │   ├── ConnectionStringHelper.cs
+│       │   ├── DataSetExtensions.cs
+│       │   ├── Enum.cs.cs
+│       │   ├── Sanitizer.cs
+│       │   └── Tools.cs
+│       ├── Program.cs                          # Punto de entrada
+│       ├── appsettings.json                    # Configuración base
+│       ├── appsettings.Development.json        # Configuración de desarrollo
+│       ├── SecureAPIRestWithJwtTokens.csproj
+│       ├── SecureAPIRestWithJwtTokens.http
+│       └── SecureAPIRestWithJwtTokens.postman_collection.json
+├── tests/
+│   └── SecureAPIRestWithJwtTokens.Tests/
+│       ├── Helpers/                            # Factories y builders de test
+│       ├── Repository/                         # Tests de repositorios
+│       ├── Services/                           # Tests de servicios
+│       └── SecureAPIRestWithJwtTokens.Tests.csproj
+├── AGENTS.md                                   # Guía de trabajo del repositorio
+├── LICENSE
+├── README.md
+├── SECURITY.md
+└── SecureAPIRestWithJwtTokens.sln
 ```
 
 ## g. Funcionalidades principales
@@ -337,6 +337,7 @@ Importar a WorkSpace en Postman el archivo [SecureAPIRestWithJwtTokens.postman_c
 
 - Logout (por sí aún estamos autenticados)
 - session/verify (UnAuthorized)
+- paises -> comunidadesaut -> provincias -> Poblaciones (UnAuthorized)
 
 ## Referencias
 

@@ -34,12 +34,12 @@ public class ClickCollectController(IStockFarmaciaCCResultService stockFarmaciaC
     /// <remarks>
     /// Ejemplos de llamada (Devuelve una lista de farmacias C&amp;C con un indicador en funcion de tener o superar el stock indicado de cada articulo) \
     /// \
-    /// GET /stockFarmacia/000001|000002/1|2/0000 \
+    /// GET /ClickCollect/StockFarmacia/000001|000002/1|2/0000 \
     /// Devuelve farmacias C&amp;C que tengan al menos 1 unidad de stock del articulo 000001 y 2 del 000002 con indicador SI \
     /// el resto de farmacias con indicador NO\
     /// \
-    /// GET /stockFarmacia/000001|000002/1|2/0003 \
-    /// Devuelve la farmacia de Betanzos con indicador  SI si tiene al menos 1 unidad de stock del articulo 000001 y 2 del 000002 \
+    /// GET /ClickCollect/StockFarmacia/000001|000002/1|2/0003 \
+    /// Devuelve la farmacia especificada con indicador  SI si tiene al menos 1 unidad de stock del articulo 000001 y 2 del 000002 \
     /// En caso contrario indicador NO 
     /// \
     /// ¡¡IMPORTANTE!! Por compatibilidad con versiones anteriores mantenemos el endpoint /api/stockFarmacia/{arts}/{uds}/{farmaini}
@@ -85,6 +85,7 @@ public class ClickCollectController(IStockFarmaciaCCResultService stockFarmaciaC
         return Ok(response);
     }
 
+#region Metodos privados
     private static List<ValidationResult> ValidateRequest(StockFarmaciaCCRequest request)
     {
         // Validar manualmente el modelo
@@ -103,5 +104,6 @@ public class ClickCollectController(IStockFarmaciaCCResultService stockFarmaciaC
 
         return validationResults;
     }
+#endregion
 }
 

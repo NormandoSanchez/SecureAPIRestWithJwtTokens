@@ -36,6 +36,8 @@ public class AvisoRepository(TrebolDbContext context,
             return [];
         }
 
+        // TODO: Verificar si el usuario autentificado es el mismo que el del filtro o tiene permisos para acceder a esos avisos
+        
         bool vistos = Common.ParseBoolFilter(filtros, FilterConstants.VISTOS, false);
         bool antiguos = Common.ParseBoolFilter(filtros, FilterConstants.ANTIGUOS, false);
         int mesesTopeVistos = _apiConfiguration.Notificaciones.MesesTopeVistos;
