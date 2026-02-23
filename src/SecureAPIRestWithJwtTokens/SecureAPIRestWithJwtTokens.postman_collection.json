@@ -8,6 +8,472 @@
 	},
 	"item": [
 		{
+			"name": "Flujo de prueba ordenado",
+			"description": "Secuencia recomendada de pruebas con encadenamiento automático en Postman: Login -> Session Verify (valid) -> Endpoint protegido -> Logout -> Session Verify (invalid)",
+			"item": [
+				{
+					"name": "Flujo - Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Login responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Session Verify (Valid)');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"extra\",\n  \"encryptedPassword\": \"Rlry7/GmY/0N6ZUDbYqqew==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Session Verify (Valid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Session verify válida responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Paises - Get All');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/session/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"session",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Paises - Get All",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Endpoint protegido responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Refresh Token');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Paises",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Paises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Refresh token responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Logout');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Logout responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Flujo - Session Verify (Invalid)');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Flujo - Session Verify (Invalid)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Session verify tras logout responde 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"pm.execution.setNextRequest(null);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/session/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"session",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Flujo de prueba negativo",
+			"description": "Secuencia negativa sin login para validar que endpoints protegidos respondan 401.",
+			"item": [
+				{
+					"name": "Negativo - Session Verify (Sin Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Session verify sin login responde 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"pm.execution.setNextRequest('Negativo - Avisos - Get All (Sin Login)');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/session/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"session",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negativo - Avisos - Get All (Sin Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Avisos GetAll sin login responde 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"pm.execution.setNextRequest('Negativo - Paises - Get All (Sin Login) EndfPoint no protegido para validar que responde 200 incluso sin login');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Avisos/1?vistos=true&antiguos=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Avisos",
+								"1"
+							],
+							"query": [
+								{
+									"key": "vistos",
+									"value": "true"
+								},
+								{
+									"key": "antiguos",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negativo - Paises - Get All (Sin Login) EndfPoint no protegido para validar que responde 200 incluso sin login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Paises sin login responde 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.execution.setNextRequest('Negativo - Refresh Token (Sin Login)');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Paises",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Paises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negativo - Refresh Token (Sin Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Refresh token sin login responde 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"pm.execution.setNextRequest('Negativo - Logout (Sin Login)');"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Negativo - Logout (Sin Login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test('Logout sin login responde 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"pm.execution.setNextRequest(null);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Authentication",
 			"item": [
 				{

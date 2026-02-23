@@ -128,6 +128,24 @@ El proyecto incluye:
 
 - `SecureAPIRestWithJwtTokens.postman_collection.json` - Colección de Postman lista para importar con todos los endpoints configurados a la solucion publicada.
 
+  - **Flujo de prueba ordenado**.
+  Secuencia de llamadas para probar el flujo normal de la API
+
+  - **Flujo de prueba negativo**.
+  Secuencia de llamadas para probar el flujo sin autorizacion.
+
+  - **Autemtication**.
+  Métodos relacionados con autentificación y autorización.
+
+  - **Geographic**.
+  Métodos para entidades gepgraficas.  
+
+  - **Click&Collect**.
+  Metodo ejemplo de ParallelSqlExecutor.
+
+  - **Avisos**.
+  Metodo para la entidad Avisos internos.
+
 ## e. Conexiones a base de datos
 
 La API utiliza tres tipos de conexiones:
