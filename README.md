@@ -336,11 +336,18 @@ Metodos cacheados
 
 - `GET /api/clickcollect` - Recuperar centros con stock para servir peticion Click & Collet
 
-Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) para ver ejemplos completos de todas las peticiones.
+## j. Documentación
+
+### Presentación
+
+[Google Slides](https://docs.google.com/presentation/d/e/2PACX-1vTHK9Xi55W5BScadGfzVsqja1SdGokns_47GSDxFp3zfMPUbzPP8Q5LJsmn6HB3eSLF-AuePlFyBlGD/pub?start=false&loop=false&delayms=3000)
+Incluido archivo pdf en el proyecto: [presentacion_tfm_visual.pdf](docs\presentacion_tfm_visual.pdf)
 
 Recomendado:
 
 Importar a WorkSpace en Postman el archivo [SecureAPIRestWithJwtTokens.postman_collection.json](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.postman_collection.json) para ver ejemplos completos de todas las peticiones en postman.
+
+Consulta el archivo [SecureAPIRestWithJwtTokens.http](src\SecureAPIRestWithJwtTokens\SecureAPIRestWithJwtTokens.http) con ejemplos de llamadas a los metodos.
 
 ## Secuencia de ejecucion de EndPoints
 
